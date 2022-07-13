@@ -2,8 +2,11 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-
-import 'custom_curves.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:friflex_logo_animation/blend_mask.dart';
+import 'package:friflex_logo_animation/svg_logo.dart';
+import 'package:widget_mask/widget_mask.dart';
 
 class FriflexAnimatedLogo extends StatefulWidget {
   const FriflexAnimatedLogo({
@@ -39,10 +42,16 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
   final startBlur = 0.0;
   final squareScale = 3.5;
   final sliderValue = 0;
+  late DrawableRoot svgRoot;
+
+  loadFile() async {
+    svgRoot = await svg.fromSvgString(svgAsString, svgAsString);
+  }
 
   @override
   void initState() {
     super.initState();
+    loadFile();
     _transformFController =
         AnimationController(vsync: this, duration: widget.duration);
     _step0PositionAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
@@ -438,7 +447,8 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
                                       iPointSymbolRotation:
                                           _fallingIRotation.value,
                                       iPointSymbolOpacity:
-                                          _fallingIOpacity.value),
+                                          _fallingIOpacity.value,
+                                      svgRoot: svgRoot),
                                 ),
                               ),
                               Positioned(
@@ -454,7 +464,50 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
                                       logoWidth * 490 / 862 * 132 / 490 * 1.2,
                                   color: Colors.white,
                                 ),
-                              )
+                              ),
+                              // ShaderMask(
+                              //   //blendMode: BlendMode.dstOut,
+                              //   //blendMode: BlendMode.srcIn,
+                              //   shaderCallback: (Rect bounds) {
+                              //     return RadialGradient(
+                              //       center: Alignment.topLeft,
+                              //       radius: 5.0,
+                              //       colors: <Color>[
+                              //         Colors.green,
+                              //         Colors.deepOrange.shade900
+                              //       ],
+                              //     ).createShader(bounds);
+                              //   },
+                              //   child: SizedBox(
+                              //     width: logoWidth * 490 / 862,
+                              //     height: logoWidth * 490 / 862 * 132 / 490,
+                              //     child: WidgetMask(
+                              //       blendMode: BlendMode.modulate,
+                              //       mask: Center(
+                              //         child: Container(
+                              //           color: Colors.white,
+                              //           width: 200,
+                              //           height: 100,
+                              //         ),
+                              //       ),
+                              //       child: SvgPicture.asset(
+                              //         'assets/logo.svg',
+                              //         //color: Colors.red,
+                              //         fit: BoxFit.fill,
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ),
+
+                              // BlendMask(
+                              //   opacity: 1.0,
+                              //   blendMode: BlendMode.srcIn,
+                              //   child: SizedBox.expand(
+                              //     child: Container(
+                              //       color: Colors.red,
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),
@@ -569,6 +622,7 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
                                           ),
                                           if (step0Moving)
                                             ClipRect(
+                                              //try to use ImageFilter instead
                                               child: BackdropFilter(
                                                 filter: ImageFilter.blur(
                                                     sigmaX: _step0BlurAnimation
@@ -670,7 +724,7 @@ class RectanglePart extends StatelessWidget {
                       color: Colors.black.withOpacity(0),
                     ),
                   ),
-                )
+                ),
             ],
           ),
         ),
@@ -735,11 +789,29 @@ class RectangleSmall extends StatelessWidget {
   }
 }
 
+class TestMaskingPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = new Paint();
+
+    canvas.saveLayer(Rect.fromLTRB(0, 0, 200, 200), paint);
+    canvas.drawRect(Rect.fromLTRB(0, 0, 100, 100), paint);
+    canvas.drawRect(
+        Rect.fromLTRB(50, 50, 150, 150), paint..blendMode = BlendMode.dstOut);
+    //dstout
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
 class CuttedRectanglePainter extends CustomPainter {
   final double borderRadius;
   final Color color;
 
   CuttedRectanglePainter({required this.color, required this.borderRadius});
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint();
@@ -769,20 +841,24 @@ class FriflexPainter extends CustomPainter {
   final double iPointSymbolOpacity;
   final double iRectHeight;
   final double iPointSymbolRotation;
+  final DrawableRoot svgRoot;
 
-  FriflexPainter(
-      {required this.iPointSymbolOpacity,
-      required this.iPointSymbolScale,
-      required this.iRectHeight,
-      required this.iPointSymbolRotation,
-      required this.iPointSymbolHeight});
+  FriflexPainter({
+    required this.iPointSymbolOpacity,
+    required this.iPointSymbolScale,
+    required this.iRectHeight,
+    required this.iPointSymbolRotation,
+    required this.iPointSymbolHeight,
+    required this.svgRoot,
+  });
 
   @override
-  void paint(Canvas canvas, Size size) {
+  void paint(Canvas canvas, Size size) async {
     Paint paint = Paint();
     Path path = Path();
-
-    // F symbol
+    canvas.saveLayer(Rect.fromLTRB(0, 0, size.width, size.height), paint);
+    svgRoot.scaleCanvasToViewBox(canvas, size);
+    //F symbol
     paint.color = const Color(0xff1f1f1f);
     path = Path();
     path.lineTo(size.width * 0.16, 0);
@@ -1142,10 +1218,9 @@ class FriflexPainter extends CustomPainter {
         size.height * 0.34, size.width * 0.84, size.height * 0.34);
     canvas.drawPath(path, paint);
 
-    // canvas.saveLayer(Rect.fromLTWH(0, 0, size.width, size.height), paint);
-    // canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.width),
-    //     paint..blendMode = BlendMode.srcOver);
-    // canvas.restore();
+    canvas.drawRect(Rect.fromLTRB(0, 0, size.width * 0, size.height * 1.1),
+        paint..blendMode = BlendMode.dstOut);
+    canvas.restore();
   }
 
   @override
