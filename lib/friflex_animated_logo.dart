@@ -22,8 +22,8 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
   late AnimationController _startingController;
   late Animation _startScaleAnimation;
   late Animation _startRotationAnimation;
-  late Animation _opacityAnimation;
-  late Animation _RRSizeAnimation;
+  late Animation _glowOpacityAnimation;
+  late Animation _glowSizeAnimation;
   late Animation<double> _step1LogoPositionAnimation;
   late Animation _step1RectPositionAnimation;
   late Animation _step1BlurAnimation;
@@ -70,20 +70,25 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
           weight: 0.3),
       TweenSequenceItem(
           tween: Tween(begin: 0.0, end: rotationAngle)
-              .chain(CurveTween(curve: Curves.easeOutBack)),
+              .chain(CurveTween(curve: Curves.ease)),
           weight: 0.1),
       TweenSequenceItem<double>(
           tween: ConstantTween<double>(rotationAngle), weight: 0.1),
       TweenSequenceItem(
-          tween: Tween(begin: rotationAngle, end: -rotationAngle)
-              .chain(CurveTween(curve: Curves.elasticOut)),
-          weight: 0.2),
+          tween: Tween(begin: rotationAngle, end: 0)
+              .chain(CurveTween(curve: Curves.ease)),
+          weight: 0.1),
+      // TweenSequenceItem<double>(tween: ConstantTween<double>(0), weight: 0.1),
+      TweenSequenceItem(
+          tween: Tween(begin: 0, end: -rotationAngle)
+              .chain(CurveTween(curve: Curves.ease)),
+          weight: 0.1),
       TweenSequenceItem<double>(
           tween: ConstantTween<double>(-rotationAngle), weight: 0.1),
       TweenSequenceItem(
-          tween: Tween(begin: -rotationAngle, end: rotationAngle)
-              .chain(CurveTween(curve: Curves.elasticOut)),
-          weight: 0.2),
+          tween: Tween(begin: -rotationAngle, end: 0)
+              .chain(CurveTween(curve: Curves.ease)),
+          weight: 0.1),
     ]).animate(
       CurvedAnimation(
         parent: _startingController,
@@ -94,12 +99,8 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
       ),
     );
 
-    _opacityAnimation = TweenSequence([
-      TweenSequenceItem(
-          tween:
-              Tween(begin: 0.0, end: 0.0).chain(CurveTween(curve: Curves.ease)),
-          weight: 0.3),
-      TweenSequenceItem<double>(tween: ConstantTween<double>(0.0), weight: 0.1),
+    _glowOpacityAnimation = TweenSequence([
+      TweenSequenceItem<double>(tween: ConstantTween<double>(0.0), weight: 0.4),
       TweenSequenceItem(
           tween:
               Tween(begin: 0.3, end: 0.0).chain(CurveTween(curve: Curves.ease)),
@@ -109,10 +110,7 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
           tween:
               Tween(begin: 0.3, end: 0.0).chain(CurveTween(curve: Curves.ease)),
           weight: 0.1),
-      TweenSequenceItem(
-          tween:
-              Tween(begin: 0.0, end: 0.0).chain(CurveTween(curve: Curves.ease)),
-          weight: 0.2),
+      TweenSequenceItem<double>(tween: ConstantTween<double>(0.0), weight: 0.1),
     ]).animate(
       CurvedAnimation(
         parent: _startingController,
@@ -123,12 +121,8 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
       ),
     );
 
-    _RRSizeAnimation = TweenSequence([
-      TweenSequenceItem(
-          tween:
-              Tween(begin: 0.0, end: 0.0).chain(CurveTween(curve: Curves.ease)),
-          weight: 0.3),
-      TweenSequenceItem<double>(tween: ConstantTween<double>(0.0), weight: 0.1),
+    _glowSizeAnimation = TweenSequence([
+      TweenSequenceItem<double>(tween: ConstantTween<double>(0.0), weight: 0.4),
       TweenSequenceItem(
           tween:
               Tween(begin: 1.0, end: 1.8).chain(CurveTween(curve: Curves.ease)),
@@ -138,10 +132,7 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
           tween:
               Tween(begin: 1.0, end: 1.8).chain(CurveTween(curve: Curves.ease)),
           weight: 0.1),
-      TweenSequenceItem(
-          tween:
-              Tween(begin: 0.0, end: 0.0).chain(CurveTween(curve: Curves.ease)),
-          weight: 0.2),
+      TweenSequenceItem<double>(tween: ConstantTween<double>(0.0), weight: 0.1),
     ]).animate(
       CurvedAnimation(
         parent: _startingController,
@@ -401,7 +392,7 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
     print('starting');
     _startingController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        _startingController.forward(from: 0.4);
+        _startingController.forward(from: 0.3);
       }
     });
     _transformFController.addListener(() => setState(() {}));
@@ -409,11 +400,12 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
       setState(() {});
       print('checking');
       print(_startRotationAnimation.value);
+      print(_startingController.value);
       if (_canTransform &&
-          _startRotationAnimation.value > -0.1 &&
-          _startRotationAnimation.value < 0.1) {
-        print('inside if');
+          _startRotationAnimation.value > -0.001 &&
+          _startRotationAnimation.value < 0.001) {
         _startingController.stop();
+
         _transformFController.forward();
       }
     });
@@ -609,7 +601,7 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
                                   alignment: Alignment.center,
                                   children: [
                                     Transform.scale(
-                                      scale: _RRSizeAnimation.value,
+                                      scale: _glowSizeAnimation.value,
                                       child: Container(
                                         height: smallSquareSide,
                                         width: smallSquareSide,
@@ -617,12 +609,12 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
                                           borderRadius: BorderRadius.circular(
                                               borderRadius),
                                           color: rectColor.withOpacity(
-                                              _opacityAnimation.value),
+                                              _glowOpacityAnimation.value),
                                         ),
                                       ),
                                     ),
                                     Transform.scale(
-                                      scale: _RRSizeAnimation.value - 0.4,
+                                      scale: _glowSizeAnimation.value - 0.4,
                                       child: Container(
                                         height: smallSquareSide,
                                         width: smallSquareSide,
@@ -630,7 +622,7 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
                                           borderRadius: BorderRadius.circular(
                                               borderRadius),
                                           color: rectColor.withOpacity(
-                                              _opacityAnimation.value),
+                                              _glowOpacityAnimation.value),
                                         ),
                                       ),
                                     ),
