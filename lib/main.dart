@@ -14,14 +14,14 @@ class FriflexLogoAnimationApp extends StatelessWidget {
       home: SafeArea(
         child: Scaffold(
           backgroundColor: Colors.white,
-          body: Center(
-            child: Container(
-              decoration: const BoxDecoration(
-                  gradient: RadialGradient(
-                      radius: 0.3,
-                      center: Alignment.topLeft,
-                      colors: [Color(0xFFEBDAFF), Colors.white])),
-              child: const FriflexAnimatedLogo(
+          body: Container(
+            decoration: const BoxDecoration(
+                gradient: RadialGradient(
+                    radius: 0.3,
+                    center: Alignment.topLeft,
+                    colors: [Color(0xFFEBDAFF), Colors.white])),
+            child: const Center(
+              child: FriflexAnimatedLogo(
                 duration: Duration(
                   milliseconds: 1500,
                 ),
