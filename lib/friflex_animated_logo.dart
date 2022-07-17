@@ -3,10 +3,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:friflex_logo_animation/blend_mask.dart';
-import 'package:friflex_logo_animation/svg_logo.dart';
-import 'package:widget_mask/widget_mask.dart';
 
 class FriflexAnimatedLogo extends StatefulWidget {
   const FriflexAnimatedLogo({
@@ -20,41 +16,143 @@ class FriflexAnimatedLogo extends StatefulWidget {
 }
 
 class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
+  static const Color rectColor = Color(0xff685bc7);
   late AnimationController _transformFController;
-  late Animation _step0PositionAnimation;
-  late Animation _step0LogoPositionAnimation;
-  late Animation _step0BlurAnimation;
-  late Animation _step1ScaleAnimation;
+  late AnimationController _startingController;
+  late Animation _startScaleAnimation;
+  late Animation _startRotationAnimation;
+  late Animation _opacityAnimation;
+  late Animation _RRSizeAnimation;
+  late Animation<double> _step1LogoPositionAnimation;
+  late Animation _step1RectPositionAnimation;
   late Animation _step1BlurAnimation;
-  late Animation _step2PositionAnimation;
+  late Animation _step2ScaleAnimation;
   late Animation _step2BlurAnimation;
   late Animation _step3PositionAnimation;
   late Animation _step3BlurAnimation;
   late Animation _step4PositionAnimation;
   late Animation _step4BlurAnimation;
+  late Animation _step5PositionAnimation;
+  late Animation _step5BlurAnimation;
   late Animation _fallingIPosition;
-  late Animation _fallingIScale;
   late Animation _fallingIRotation;
   late Animation _fallingIOpacity;
   late Animation _iRectHeight;
-  final blurValue = 0.15;
   final startBlur = 0.0;
+  final finalBlur = 0.15;
   final squareScale = 3.5;
   final sliderValue = 0;
-  late DrawableRoot svgRoot;
-
-  loadFile() async {
-    svgRoot = await svg.fromSvgString(svgAsString, svgAsString);
-  }
+  final rotationAngle = pi / 8;
+  bool _canTransform = false;
 
   @override
   void initState() {
     super.initState();
-    loadFile();
     _transformFController =
         AnimationController(vsync: this, duration: widget.duration);
-    _step0PositionAnimation = Tween<double>(begin: 1.0, end: 0.0).animate(
+    _startingController = AnimationController(
+        vsync: this, duration: Duration(milliseconds: 10000));
+    _startScaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _startingController,
+        curve: const Interval(
+          0.0,
+          0.2,
+          curve: Curves.elasticOut,
+        ),
+      ),
+    );
+    _startRotationAnimation = TweenSequence([
+      TweenSequenceItem(
+          tween: Tween(begin: -3 * pi, end: 0.0)
+              .chain(CurveTween(curve: Curves.elasticOut)),
+          weight: 0.3),
+      TweenSequenceItem(
+          tween: Tween(begin: 0.0, end: rotationAngle)
+              .chain(CurveTween(curve: Curves.easeOutBack)),
+          weight: 0.1),
+      TweenSequenceItem<double>(
+          tween: ConstantTween<double>(rotationAngle), weight: 0.1),
+      TweenSequenceItem(
+          tween: Tween(begin: rotationAngle, end: -rotationAngle)
+              .chain(CurveTween(curve: Curves.elasticOut)),
+          weight: 0.2),
+      TweenSequenceItem<double>(
+          tween: ConstantTween<double>(-rotationAngle), weight: 0.1),
+      TweenSequenceItem(
+          tween: Tween(begin: -rotationAngle, end: rotationAngle)
+              .chain(CurveTween(curve: Curves.elasticOut)),
+          weight: 0.2),
+    ]).animate(
+      CurvedAnimation(
+        parent: _startingController,
+        curve: const Interval(
+          0.0,
+          1.0,
+        ),
+      ),
+    );
+
+    _opacityAnimation = TweenSequence([
+      TweenSequenceItem(
+          tween:
+              Tween(begin: 0.0, end: 0.0).chain(CurveTween(curve: Curves.ease)),
+          weight: 0.3),
+      TweenSequenceItem<double>(tween: ConstantTween<double>(0.0), weight: 0.1),
+      TweenSequenceItem(
+          tween:
+              Tween(begin: 0.3, end: 0.0).chain(CurveTween(curve: Curves.ease)),
+          weight: 0.1),
+      TweenSequenceItem<double>(tween: ConstantTween<double>(0.0), weight: 0.2),
+      TweenSequenceItem(
+          tween:
+              Tween(begin: 0.3, end: 0.0).chain(CurveTween(curve: Curves.ease)),
+          weight: 0.1),
+      TweenSequenceItem(
+          tween:
+              Tween(begin: 0.0, end: 0.0).chain(CurveTween(curve: Curves.ease)),
+          weight: 0.2),
+    ]).animate(
+      CurvedAnimation(
+        parent: _startingController,
+        curve: const Interval(
+          0.0,
+          1.0,
+        ),
+      ),
+    );
+
+    _RRSizeAnimation = TweenSequence([
+      TweenSequenceItem(
+          tween:
+              Tween(begin: 0.0, end: 0.0).chain(CurveTween(curve: Curves.ease)),
+          weight: 0.3),
+      TweenSequenceItem<double>(tween: ConstantTween<double>(0.0), weight: 0.1),
+      TweenSequenceItem(
+          tween:
+              Tween(begin: 1.0, end: 1.8).chain(CurveTween(curve: Curves.ease)),
+          weight: 0.1),
+      TweenSequenceItem<double>(tween: ConstantTween<double>(0.0), weight: 0.2),
+      TweenSequenceItem(
+          tween:
+              Tween(begin: 1.0, end: 1.8).chain(CurveTween(curve: Curves.ease)),
+          weight: 0.1),
+      TweenSequenceItem(
+          tween:
+              Tween(begin: 0.0, end: 0.0).chain(CurveTween(curve: Curves.ease)),
+          weight: 0.2),
+    ]).animate(
+      CurvedAnimation(
+        parent: _startingController,
+        curve: const Interval(
+          0.0,
+          1.0,
+        ),
+      ),
+    );
+
+    _step1LogoPositionAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(
         parent: _transformFController,
         curve: const Interval(
@@ -64,7 +162,7 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
         ),
       ),
     );
-    _step0LogoPositionAnimation =
+    _step1RectPositionAnimation =
         Tween<double>(begin: 1.0, end: 62 / 862).animate(
       CurvedAnimation(
         parent: _transformFController,
@@ -75,15 +173,15 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
         ),
       ),
     );
-    _step0BlurAnimation = TweenSequence([
+    _step1BlurAnimation = TweenSequence([
       TweenSequenceItem(
-          tween: Tween(begin: startBlur, end: blurValue)
+          tween: Tween(begin: startBlur, end: finalBlur)
               .chain(CurveTween(curve: Curves.linear)),
           weight: 0.2),
       TweenSequenceItem<double>(
-          tween: ConstantTween<double>(blurValue), weight: 0.6),
+          tween: ConstantTween<double>(finalBlur), weight: 0.6),
       TweenSequenceItem(
-          tween: Tween(begin: blurValue, end: startBlur)
+          tween: Tween(begin: finalBlur, end: startBlur)
               .chain(CurveTween(curve: Curves.linear)),
           weight: 0.2)
     ]).animate(
@@ -92,69 +190,36 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
         curve: const Interval(
           0.0,
           0.2,
-          curve: Curves.linear,
         ),
       ),
     );
-    _step1ScaleAnimation = Tween<double>(begin: squareScale, end: 1.0).animate(
+    _step2ScaleAnimation = Tween<double>(begin: squareScale, end: 1.0).animate(
       CurvedAnimation(
         parent: _transformFController,
         curve: const Interval(
           0.2,
           0.4,
-          curve: Curves.easeIn,
-        ),
-      ),
-    );
-    _step1BlurAnimation = TweenSequence([
-      TweenSequenceItem(
-          tween: Tween(begin: startBlur, end: blurValue)
-              .chain(CurveTween(curve: Curves.linear)),
-          weight: 0.2),
-      TweenSequenceItem<double>(
-          tween: ConstantTween<double>(blurValue), weight: 0.6),
-      TweenSequenceItem(
-          tween: Tween(begin: blurValue, end: startBlur)
-              .chain(CurveTween(curve: Curves.linear)),
-          weight: 0.2)
-    ]).animate(
-      CurvedAnimation(
-        parent: _transformFController,
-        curve: const Interval(
-          0.2,
-          0.4,
-          curve: Curves.linear,
-        ),
-      ),
-    );
-    _step2PositionAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(
-        parent: _transformFController,
-        curve: const Interval(
-          0.4,
-          0.6,
           curve: Curves.easeIn,
         ),
       ),
     );
     _step2BlurAnimation = TweenSequence([
       TweenSequenceItem(
-          tween: Tween(begin: startBlur, end: blurValue)
+          tween: Tween(begin: startBlur, end: finalBlur)
               .chain(CurveTween(curve: Curves.linear)),
           weight: 0.2),
       TweenSequenceItem<double>(
-          tween: ConstantTween<double>(blurValue), weight: 0.6),
+          tween: ConstantTween<double>(finalBlur), weight: 0.6),
       TweenSequenceItem(
-          tween: Tween(begin: blurValue, end: startBlur)
+          tween: Tween(begin: finalBlur, end: startBlur)
               .chain(CurveTween(curve: Curves.linear)),
           weight: 0.2)
     ]).animate(
       CurvedAnimation(
         parent: _transformFController,
         curve: const Interval(
+          0.2,
           0.4,
-          0.6,
-          curve: Curves.linear,
         ),
       ),
     );
@@ -162,30 +227,29 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
       CurvedAnimation(
         parent: _transformFController,
         curve: const Interval(
+          0.4,
           0.6,
-          0.8,
           curve: Curves.easeIn,
         ),
       ),
     );
     _step3BlurAnimation = TweenSequence([
       TweenSequenceItem(
-          tween: Tween(begin: startBlur, end: blurValue)
+          tween: Tween(begin: startBlur, end: finalBlur)
               .chain(CurveTween(curve: Curves.linear)),
           weight: 0.2),
       TweenSequenceItem<double>(
-          tween: ConstantTween<double>(blurValue), weight: 0.6),
+          tween: ConstantTween<double>(finalBlur), weight: 0.6),
       TweenSequenceItem(
-          tween: Tween(begin: blurValue, end: startBlur)
+          tween: Tween(begin: finalBlur, end: startBlur)
               .chain(CurveTween(curve: Curves.linear)),
           weight: 0.2)
     ]).animate(
       CurvedAnimation(
         parent: _transformFController,
         curve: const Interval(
+          0.4,
           0.6,
-          0.8,
-          curve: Curves.linear,
         ),
       ),
     );
@@ -193,21 +257,51 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
       CurvedAnimation(
         parent: _transformFController,
         curve: const Interval(
+          0.6,
           0.8,
-          1.0,
           curve: Curves.easeIn,
         ),
       ),
     );
     _step4BlurAnimation = TweenSequence([
       TweenSequenceItem(
-          tween: Tween(begin: startBlur, end: blurValue)
+          tween: Tween(begin: startBlur, end: finalBlur)
               .chain(CurveTween(curve: Curves.linear)),
           weight: 0.2),
       TweenSequenceItem<double>(
-          tween: ConstantTween<double>(blurValue), weight: 0.6),
+          tween: ConstantTween<double>(finalBlur), weight: 0.6),
       TweenSequenceItem(
-          tween: Tween(begin: blurValue, end: startBlur)
+          tween: Tween(begin: finalBlur, end: startBlur)
+              .chain(CurveTween(curve: Curves.linear)),
+          weight: 0.2)
+    ]).animate(
+      CurvedAnimation(
+        parent: _transformFController,
+        curve: const Interval(
+          0.6,
+          0.8,
+        ),
+      ),
+    );
+    _step5PositionAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _transformFController,
+        curve: const Interval(
+          0.8,
+          1.0,
+          curve: Curves.easeIn,
+        ),
+      ),
+    );
+    _step5BlurAnimation = TweenSequence([
+      TweenSequenceItem(
+          tween: Tween(begin: startBlur, end: finalBlur)
+              .chain(CurveTween(curve: Curves.linear)),
+          weight: 0.2),
+      TweenSequenceItem<double>(
+          tween: ConstantTween<double>(finalBlur), weight: 0.6),
+      TweenSequenceItem(
+          tween: Tween(begin: finalBlur, end: startBlur)
               .chain(CurveTween(curve: Curves.linear)),
           weight: 0.2)
     ]).animate(
@@ -216,7 +310,6 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
         curve: const Interval(
           0.8,
           1.0,
-          curve: Curves.linear,
         ),
       ),
     );
@@ -227,27 +320,6 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
         curve: const Interval(
           0.6,
           0.68,
-          curve: Curves.linear,
-        ),
-      ),
-    );
-
-    _fallingIScale = TweenSequence([
-      TweenSequenceItem(
-          tween: Tween(begin: 1.0, end: 1.4)
-              .chain(CurveTween(curve: Curves.linear)),
-          weight: 0.15),
-      //TweenSequenceItem<double>(tween: ConstantTween<double>(1.3), weight: 0.2),
-      TweenSequenceItem(
-          tween: Tween(begin: 1.4, end: 1.0)
-              .chain(CurveTween(curve: Curves.linear)),
-          weight: 0.25)
-    ]).animate(
-      CurvedAnimation(
-        parent: _transformFController,
-        curve: const Interval(
-          0.6,
-          1.0,
           curve: Curves.linear,
         ),
       ),
@@ -294,7 +366,6 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
         curve: const Interval(
           0.6,
           1.0,
-          curve: Curves.linear,
         ),
       ),
     );
@@ -326,350 +397,298 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
         ),
       ),
     );
-
+    _startingController.forward();
+    print('starting');
+    _startingController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _startingController.forward(from: 0.4);
+      }
+    });
     _transformFController.addListener(() => setState(() {}));
-    _transformFController.forward(from: 0.5);
+    _startingController.addListener(() {
+      setState(() {});
+      print('checking');
+      print(_startRotationAnimation.value);
+      if (_canTransform &&
+          _startRotationAnimation.value > -0.1 &&
+          _startRotationAnimation.value < 0.1) {
+        print('inside if');
+        _startingController.stop();
+        _transformFController.forward();
+      }
+    });
   }
 
   @override
   void dispose() {
     _transformFController.dispose();
+    _startingController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(_step0PositionAnimation.value);
+    // print(_startingController.value);
+    //print(_canTransform);
     //для Flutter Web, т.к. в нем нельзя устанавливать значение 0
     //в blur sigmaX или sigmaY, открытая issue
     //https://github.com/flutter/flutter/issues/89433
-    final step1Moving = _step1BlurAnimation.value > 0.001;
-    final step0Moving = _step0BlurAnimation.value > 0.001;
+    final step1Moving = _step2BlurAnimation.value > 0.001;
+    final step0Moving = _step1BlurAnimation.value > 0.001;
 //replace setState with animatedBuilder
     return LayoutBuilder(builder: (context, constraints) {
-      final bigSquareDiagonal = constraints.maxWidth * 200 / 862;
+      final logoWidth = constraints.maxWidth;
+      final logoHeight = logoWidth * 200 / 862;
+      final bigSquareDiagonal = logoHeight;
       final bigSquareSide = bigSquareDiagonal / sqrt(2.0);
-      final bigSquareDifference = bigSquareSide / 2 * (sqrt(2.0) - 1);
+      final bigSquareDiagonalDiff = bigSquareSide / 2 * (sqrt(2.0) - 1);
       final smallSquareDiagonal = bigSquareDiagonal / squareScale;
       final smallSquareSide = bigSquareSide / squareScale;
       final borderRadius = smallSquareSide / 6.0;
-      final smallSquareDifference = bigSquareDifference / squareScale;
+      final smallSquareDiagonalDiff = bigSquareDiagonalDiff / squareScale;
       final horizontalDiagonalOffset =
           smallSquareSide * (1 + (sqrt(2) - 1)) * 0.9;
-      final logoWidth = constraints.maxWidth;
-      return Container(
-        decoration: const BoxDecoration(
-            gradient: RadialGradient(
-                radius: 1.8,
-                center: Alignment.topLeft,
-                colors: [Color(0xFFEBDAFF), Colors.green])),
-        child: Column(
-          children: [
-            Slider(
-                value: _transformFController.value,
-                onChanged: (value) => _transformFController.value = value),
-            Text(_transformFController.value.toString()),
-            Text(_fallingIPosition.value.toString()),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                    onPressed: () => _transformFController.reset(),
-                    child: const Text('Сбросить')),
-                ElevatedButton(
-                    onPressed: () => _transformFController.forward(),
-                    child: const Text('Играть')),
-                ElevatedButton(
-                    onPressed: () => _transformFController.forward(from: 0),
-                    child: const Text('Играть с начала')),
-              ],
-            ),
-            Stack(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  color: Colors.yellow,
-                  child: LayoutBuilder(builder: (context, constraints) {
-                    return Container();
-                  }),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width -
-                      bigSquareSide / 2.0 -
-                      bigSquareDifference,
-                  color: Colors.blue,
-                  child: LayoutBuilder(builder: (context, constraints) {
-                    return Container();
-                  }),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width / 2,
-                  color: Colors.red,
-                  child: LayoutBuilder(builder: (context, constraints) {
-                    return Container();
-                  }),
-                ),
-                Container(
-                  width: bigSquareSide / 2.0 + bigSquareDifference,
-                  color: Colors.green,
-                  child: LayoutBuilder(builder: (context, constraints) {
-                    return Container();
-                  }),
-                ),
-                // Container(
-                //   width: logoWidth,
-                //   color: Colors.white,
-                //   child: LayoutBuilder(builder: (context, constraints) {
-                //     return Container();
-                //   }),
-                // ),
-                Center(
-                  child: SizedBox(
-                    width: logoWidth,
-                    height: logoWidth * 200 / 862,
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          bottom: 0.0,
-                          right: bigSquareSide / 2.0 + bigSquareDifference,
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              SizedBox(
-                                width: logoWidth * 490 / 862,
-                                height: logoWidth * 490 / 862 * 132 / 490,
-                                child: CustomPaint(
-                                  painter: FriflexPainter(
-                                      iPointSymbolHeight:
-                                          _fallingIPosition.value,
-                                      iPointSymbolScale: _fallingIScale.value,
-                                      iRectHeight: _iRectHeight.value,
-                                      iPointSymbolRotation:
-                                          _fallingIRotation.value,
-                                      iPointSymbolOpacity:
-                                          _fallingIOpacity.value,
-                                      svgRoot: svgRoot),
-                                ),
-                              ),
-                              Positioned(
-                                left: 0.0,
-                                bottom: 0.0,
-                                child: Container(
-                                  width: logoWidth *
-                                      490 /
-                                      862 *
-                                      _step0PositionAnimation.value *
-                                      1.1,
-                                  height:
-                                      logoWidth * 490 / 862 * 132 / 490 * 1.2,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              // ShaderMask(
-                              //   //blendMode: BlendMode.dstOut,
-                              //   //blendMode: BlendMode.srcIn,
-                              //   shaderCallback: (Rect bounds) {
-                              //     return RadialGradient(
-                              //       center: Alignment.topLeft,
-                              //       radius: 5.0,
-                              //       colors: <Color>[
-                              //         Colors.green,
-                              //         Colors.deepOrange.shade900
-                              //       ],
-                              //     ).createShader(bounds);
-                              //   },
-                              //   child: SizedBox(
-                              //     width: logoWidth * 490 / 862,
-                              //     height: logoWidth * 490 / 862 * 132 / 490,
-                              //     child: WidgetMask(
-                              //       blendMode: BlendMode.modulate,
-                              //       mask: Center(
-                              //         child: Container(
-                              //           color: Colors.white,
-                              //           width: 200,
-                              //           height: 100,
-                              //         ),
-                              //       ),
-                              //       child: SvgPicture.asset(
-                              //         'assets/logo.svg',
-                              //         //color: Colors.red,
-                              //         fit: BoxFit.fill,
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
 
-                              // BlendMask(
-                              //   opacity: 1.0,
-                              //   blendMode: BlendMode.srcIn,
-                              //   child: SizedBox.expand(
-                              //     child: Container(
-                              //       color: Colors.red,
-                              //     ),
-                              //   ),
-                              // ),
-                            ],
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Slider(
+          //     value: _transformFController.value,
+          //     onChanged: (value) => _transformFController.value = value),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     ElevatedButton(
+          //         onPressed: () => _transformFController.reset(),
+          //         child: const Text('Сбросить')),
+          //     ElevatedButton(
+          //         onPressed: () => _transformFController.forward(),
+          //         child: const Text('Играть')),
+          //     ElevatedButton(
+          //         onPressed: () => _transformFController.forward(from: 0),
+          //         child: const Text('Играть с начала')),
+          //   ],
+          // ),
+          SizedBox(
+            width: logoWidth,
+            height: logoWidth * 200 / 862,
+            child: Stack(
+              children: [
+                Positioned(
+                  bottom: 0.0,
+                  right: bigSquareSide / 2.0 + bigSquareDiagonalDiff,
+                  child: SizeTransition(
+                    sizeFactor: _step1LogoPositionAnimation,
+                    axis: Axis.horizontal,
+                    axisAlignment: 1,
+                    child: SizedBox(
+                      width: logoWidth * 490 / 862,
+                      height: logoWidth * 200 / 862,
+                      child: Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          SizedBox(
+                            width: logoWidth * 490 / 862,
+                            height: logoWidth * 132 / 862,
+                            child: CustomPaint(
+                              painter: FriflexIPainter(
+                                iPointSymbolHeight: _fallingIPosition.value,
+                                iRectHeight: _iRectHeight.value,
+                                iPointSymbolRotation: _fallingIRotation.value,
+                                iPointSymbolOpacity: _fallingIOpacity.value,
+                                iRectColor: Colors.black,
+                                dotColor: rectColor,
+                              ),
+                            ),
                           ),
-                        ),
-                        Positioned(
-                          left: _step0LogoPositionAnimation.value *
-                              (logoWidth / 2 - bigSquareDiagonal / 2),
-                          bottom: 0,
-                          child: SizedBox(
-                            height: bigSquareDiagonal,
-                            width: bigSquareDiagonal,
+                          SizedBox(
+                            width: logoWidth * 490 / 862,
+                            height: logoWidth * 132 / 862,
+                            child: SvgPicture.asset(
+                              'assets/logo.svg',
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: _step1RectPositionAnimation.value *
+                      (logoWidth / 2 - bigSquareDiagonal / 2),
+                  bottom: 0,
+                  child: Transform.scale(
+                    scale: _startScaleAnimation.value,
+                    child: SizedBox(
+                      height: bigSquareDiagonal,
+                      width: bigSquareDiagonal,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Transform.translate(
+                            offset: Offset(
+                                horizontalDiagonalOffset *
+                                    _step4PositionAnimation.value,
+                                -smallSquareSide /
+                                    2.0 *
+                                    squareScale *
+                                    _step3PositionAnimation.value),
                             child: Stack(
                               alignment: Alignment.center,
                               children: [
                                 Transform.translate(
                                   offset: Offset(
                                       horizontalDiagonalOffset *
-                                          _step3PositionAnimation.value,
-                                      -smallSquareSide /
-                                          2.0 *
-                                          squareScale *
-                                          _step2PositionAnimation.value),
-                                  child: Stack(
-                                    alignment: Alignment.center,
-                                    children: [
-                                      Transform.translate(
-                                        offset: Offset(
-                                            horizontalDiagonalOffset *
-                                                _step4PositionAnimation.value,
-                                            0),
-                                        child: RectanglePart(
-                                          size: smallSquareSide,
-                                          scale: _step1ScaleAnimation.value,
-                                          borderRadius: borderRadius,
-                                          blurValue: _step4BlurAnimation.value,
-                                        ),
-                                      ),
-                                      RectanglePart(
-                                        size: smallSquareSide,
-                                        scale: _step1ScaleAnimation.value,
-                                        borderRadius: borderRadius,
-                                        blurValue: _step3BlurAnimation.value,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Transform.translate(
-                                  offset: Offset(
-                                      horizontalDiagonalOffset *
-                                          _step3PositionAnimation.value,
+                                          _step5PositionAnimation.value,
                                       0),
                                   child: RectanglePart(
+                                    color: rectColor,
                                     size: smallSquareSide,
-                                    scale: _step1ScaleAnimation.value,
                                     borderRadius: borderRadius,
-                                    blurValue: _step3BlurAnimation.value,
+                                    blurValue: _step5BlurAnimation.value,
                                   ),
                                 ),
-                                Transform.translate(
-                                  offset: Offset(
-                                      0,
-                                      -smallSquareSide /
-                                          2.0 *
-                                          squareScale *
-                                          _step2PositionAnimation.value),
-                                  child: RectangleSmall(
-                                    size: smallSquareSide,
-                                    scale: _step1ScaleAnimation.value,
-                                    borderRadius: borderRadius,
-                                    blurValue: _step2BlurAnimation.value,
-                                  ),
-                                ),
-                                Transform.translate(
-                                  offset: Offset(
-                                      0,
-                                      smallSquareSide /
-                                          2.0 *
-                                          squareScale *
-                                          _step2PositionAnimation.value),
-                                  child: RectangleSmall(
-                                    size: smallSquareSide,
-                                    scale: _step1ScaleAnimation.value,
-                                    borderRadius: borderRadius,
-                                    blurValue: _step2BlurAnimation.value,
-                                  ),
-                                ),
-                                Transform.scale(
-                                  scale: _step1ScaleAnimation.value,
-                                  child: Transform.rotate(
-                                    angle: pi / 4,
-                                    child: SizedBox(
-                                      height: smallSquareSide * 1.1,
-                                      width: smallSquareSide * 1.1,
-                                      child: Stack(
-                                        alignment: Alignment.center,
-                                        children: [
-                                          Center(
-                                            child: InkWell(
-                                              onTap: () => _transformFController
-                                                  .forward(),
-                                              child: Container(
-                                                height: smallSquareSide,
-                                                width: smallSquareSide,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          borderRadius),
-                                                  color:
-                                                      const Color(0xff685bc7),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          if (step0Moving)
-                                            ClipRect(
-                                              //try to use ImageFilter instead
-                                              child: BackdropFilter(
-                                                filter: ImageFilter.blur(
-                                                    sigmaX: _step0BlurAnimation
-                                                        .value,
-                                                    sigmaY: _step0BlurAnimation
-                                                        .value),
-                                                child: Container(
-                                                  height: smallSquareSide * 1.1,
-                                                  width: smallSquareSide * 1.1,
-                                                  color: Colors.black
-                                                      .withOpacity(0),
-                                                ),
-                                              ),
-                                            ),
-                                          if (step1Moving)
-                                            ClipRect(
-                                              child: BackdropFilter(
-                                                filter: ImageFilter.blur(
-                                                    sigmaX: _step1BlurAnimation
-                                                        .value,
-                                                    sigmaY: _step1BlurAnimation
-                                                        .value),
-                                                child: Container(
-                                                  height: smallSquareSide * 1.1,
-                                                  width: smallSquareSide * 1.1,
-                                                  color: Colors.black
-                                                      .withOpacity(0),
-                                                ),
-                                              ),
-                                            ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
+                                RectanglePart(
+                                  color: rectColor,
+                                  size: smallSquareSide,
+                                  borderRadius: borderRadius,
+                                  blurValue: _step4BlurAnimation.value,
                                 ),
                               ],
                             ),
                           ),
-                        ),
-                      ],
+                          Transform.translate(
+                            offset: Offset(
+                                horizontalDiagonalOffset *
+                                    _step4PositionAnimation.value,
+                                0),
+                            child: RectanglePart(
+                              color: rectColor,
+                              size: smallSquareSide,
+                              borderRadius: borderRadius,
+                              blurValue: _step4BlurAnimation.value,
+                            ),
+                          ),
+                          Transform.translate(
+                            offset: Offset(
+                                0,
+                                -smallSquareSide /
+                                    2.0 *
+                                    squareScale *
+                                    _step3PositionAnimation.value),
+                            child: RectangleSmall(
+                              color: rectColor,
+                              size: smallSquareSide,
+                              borderRadius: borderRadius,
+                              blurValue: _step3BlurAnimation.value,
+                            ),
+                          ),
+                          Transform.translate(
+                            offset: Offset(
+                                0,
+                                smallSquareSide /
+                                    2.0 *
+                                    squareScale *
+                                    _step3PositionAnimation.value),
+                            child: RectangleSmall(
+                              color: rectColor,
+                              size: smallSquareSide,
+                              borderRadius: borderRadius,
+                              blurValue: _step3BlurAnimation.value,
+                            ),
+                          ),
+                          Transform.scale(
+                            scale: _step2ScaleAnimation.value,
+                            child: Transform.rotate(
+                              angle: pi / 4 + _startRotationAnimation.value,
+                              child: SizedBox(
+                                height: smallSquareSide * 1.1,
+                                width: smallSquareSide * 1.1,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Transform.scale(
+                                      scale: _RRSizeAnimation.value,
+                                      child: Container(
+                                        height: smallSquareSide,
+                                        width: smallSquareSide,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                              borderRadius),
+                                          color: rectColor.withOpacity(
+                                              _opacityAnimation.value),
+                                        ),
+                                      ),
+                                    ),
+                                    Transform.scale(
+                                      scale: _RRSizeAnimation.value - 0.4,
+                                      child: Container(
+                                        height: smallSquareSide,
+                                        width: smallSquareSide,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                              borderRadius),
+                                          color: rectColor.withOpacity(
+                                              _opacityAnimation.value),
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () => _canTransform = true,
+                                      child: Container(
+                                        height: smallSquareSide,
+                                        width: smallSquareSide,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(
+                                              borderRadius),
+                                          color: rectColor,
+                                        ),
+                                      ),
+                                    ),
+                                    if (step0Moving)
+                                      ClipRect(
+                                        //try to use ImageFilter instead
+                                        child: BackdropFilter(
+                                          filter: ImageFilter.blur(
+                                              sigmaX: _step1BlurAnimation.value,
+                                              sigmaY:
+                                                  _step1BlurAnimation.value),
+                                          child: Container(
+                                            height: smallSquareSide * 1.1,
+                                            width: smallSquareSide * 1.1,
+                                            color: Colors.black.withOpacity(0),
+                                          ),
+                                        ),
+                                      ),
+                                    if (step1Moving)
+                                      ClipRect(
+                                        child: BackdropFilter(
+                                          filter: ImageFilter.blur(
+                                              sigmaX: _step2BlurAnimation.value,
+                                              sigmaY:
+                                                  _step2BlurAnimation.value),
+                                          child: Container(
+                                            height: smallSquareSide * 1.1,
+                                            width: smallSquareSide * 1.1,
+                                            color: Colors.black.withOpacity(0),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+        ],
       );
     });
   }
@@ -680,53 +699,53 @@ class RectanglePart extends StatelessWidget {
     Key? key,
     required this.size,
     required this.blurValue,
-    required this.scale,
     required this.borderRadius,
+    required this.color,
   }) : super(key: key);
 
+  static const rotation = pi / 4;
+  static const blurOversize = 1.1;
+  static const blurThreshold = 0.001;
+
+  final Color color;
   final double size;
-  final double scale;
   final double borderRadius;
   final double blurValue;
 
   @override
   Widget build(BuildContext context) {
-    final bool isBlur = blurValue > 0.001;
-    return Transform.scale(
-      scale: scale,
-      child: Transform.rotate(
-        angle: pi / 4,
-        child: SizedBox(
-          height: size * 1.1,
-          width: size * 1.1,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              SizedBox(
-                height: size,
-                width: size,
-                child: CustomPaint(
-                  painter: CuttedRectanglePainter(
-                      borderRadius: borderRadius,
-                      color: const Color(0xff685bc7)),
-                ),
+    final bool isBlur = blurValue > blurThreshold;
+    return Transform.rotate(
+      angle: rotation,
+      child: SizedBox(
+        height: size * blurOversize,
+        width: size * blurOversize,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            SizedBox(
+              height: size,
+              width: size,
+              child: CustomPaint(
+                painter: CuttedRectanglePainter(
+                    borderRadius: borderRadius, color: color),
               ),
-              if (isBlur)
-                ClipRect(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(
-                      sigmaX: blurValue,
-                      sigmaY: blurValue,
-                    ),
-                    child: Container(
-                      height: size * 1.1,
-                      width: size * 1.1,
-                      color: Colors.black.withOpacity(0),
-                    ),
+            ),
+            if (isBlur)
+              ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(
+                    sigmaX: blurValue,
+                    sigmaY: blurValue,
+                  ),
+                  child: Container(
+                    height: size * blurOversize,
+                    width: size * blurOversize,
+                    color: Colors.black.withOpacity(0),
                   ),
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
     );
@@ -738,72 +757,56 @@ class RectangleSmall extends StatelessWidget {
     Key? key,
     required this.blurValue,
     required this.size,
-    required this.scale,
     required this.borderRadius,
+    required this.color,
   }) : super(key: key);
 
+  static const rotation = pi / 4;
+  static const blurOversize = 1.1;
+  static const blurThreshold = 0.001;
+
+  final Color color;
   final double size;
-  final double scale;
   final double borderRadius;
   final double blurValue;
 
   @override
   Widget build(BuildContext context) {
-    final bool isBlur = blurValue > 0.001;
-    return Transform.scale(
-      scale: scale,
-      child: Transform.rotate(
-        angle: pi / 4,
-        child: SizedBox(
-          height: size * 1.1,
-          width: size * 1.1,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Container(
-                height: size,
-                width: size,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(borderRadius),
-                    color: const Color(0xff685bc7)),
-              ),
-              if (isBlur)
-                ClipRect(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(
-                      sigmaX: blurValue,
-                      sigmaY: blurValue,
-                    ),
-                    child: Container(
-                      height: size * 1.1,
-                      width: size * 1.1,
-                      color: Colors.black.withOpacity(0),
-                    ),
+    final bool isBlur = blurValue > blurThreshold;
+    return Transform.rotate(
+      angle: rotation,
+      child: SizedBox(
+        height: size * blurOversize,
+        width: size * blurOversize,
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              height: size,
+              width: size,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(borderRadius),
+                  color: color),
+            ),
+            if (isBlur)
+              ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(
+                    sigmaX: blurValue,
+                    sigmaY: blurValue,
                   ),
-                )
-            ],
-          ),
+                  child: Container(
+                    height: size * blurOversize,
+                    width: size * blurOversize,
+                    color: Colors.black.withOpacity(0),
+                  ),
+                ),
+              )
+          ],
         ),
       ),
     );
   }
-}
-
-class TestMaskingPainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    Paint paint = new Paint();
-
-    canvas.saveLayer(Rect.fromLTRB(0, 0, 200, 200), paint);
-    canvas.drawRect(Rect.fromLTRB(0, 0, 100, 100), paint);
-    canvas.drawRect(
-        Rect.fromLTRB(50, 50, 150, 150), paint..blendMode = BlendMode.dstOut);
-    //dstout
-    canvas.restore();
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class CuttedRectanglePainter extends CustomPainter {
@@ -835,147 +838,29 @@ class CuttedRectanglePainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-class FriflexPainter extends CustomPainter {
+class FriflexIPainter extends CustomPainter {
   final double iPointSymbolHeight;
-  final double iPointSymbolScale;
   final double iPointSymbolOpacity;
-  final double iRectHeight;
   final double iPointSymbolRotation;
-  final DrawableRoot svgRoot;
+  final double iRectHeight;
+  final Color dotColor;
+  final Color iRectColor;
 
-  FriflexPainter({
+  FriflexIPainter({
     required this.iPointSymbolOpacity,
-    required this.iPointSymbolScale,
-    required this.iRectHeight,
     required this.iPointSymbolRotation,
     required this.iPointSymbolHeight,
-    required this.svgRoot,
+    required this.iRectHeight,
+    required this.dotColor,
+    required this.iRectColor,
   });
 
   @override
-  void paint(Canvas canvas, Size size) async {
-    Paint paint = Paint();
-    Path path = Path();
-    canvas.saveLayer(Rect.fromLTRB(0, 0, size.width, size.height), paint);
-    svgRoot.scaleCanvasToViewBox(canvas, size);
-    //F symbol
-    paint.color = const Color(0xff1f1f1f);
-    path = Path();
-    path.lineTo(size.width * 0.16, 0);
-    path.cubicTo(size.width * 0.17, 0, size.width * 0.18, size.height * 0.03,
-        size.width * 0.18, size.height * 0.05);
-    path.cubicTo(size.width * 0.18, size.height * 0.05, size.width * 0.18,
-        size.height * 0.12, size.width * 0.18, size.height * 0.12);
-    path.cubicTo(size.width * 0.18, size.height * 0.15, size.width * 0.17,
-        size.height * 0.17, size.width * 0.16, size.height * 0.17);
-    path.cubicTo(size.width * 0.16, size.height * 0.17, size.width * 0.09,
-        size.height * 0.17, size.width * 0.09, size.height * 0.17);
-    path.cubicTo(size.width * 0.09, size.height * 0.17, size.width * 0.06,
-        size.height * 0.17, size.width * 0.06, size.height * 0.17);
-    path.cubicTo(size.width * 0.06, size.height * 0.17, size.width * 0.06,
-        size.height * 0.17, size.width * 0.06, size.height * 0.17);
-    path.cubicTo(size.width * 0.06, size.height * 0.17, size.width * 0.06,
-        size.height * 0.17, size.width * 0.06, size.height * 0.17);
-    path.cubicTo(size.width * 0.06, size.height * 0.17, size.width * 0.06,
-        size.height * 0.17, size.width * 0.06, size.height * 0.17);
-    path.cubicTo(size.width * 0.05, size.height * 0.17, size.width * 0.04,
-        size.height * 0.19, size.width * 0.04, size.height * 0.22);
-    path.cubicTo(size.width * 0.04, size.height * 0.22, size.width * 0.04,
-        size.height * 0.22, size.width * 0.04, size.height * 0.22);
-    path.cubicTo(size.width * 0.04, size.height * 0.22, size.width * 0.04,
-        size.height * 0.42, size.width * 0.04, size.height * 0.42);
-    path.cubicTo(size.width * 0.04, size.height * 0.42, size.width * 0.12,
-        size.height * 0.42, size.width * 0.12, size.height * 0.42);
-    path.cubicTo(size.width * 0.13, size.height * 0.42, size.width * 0.13,
-        size.height * 0.44, size.width * 0.13, size.height * 0.47);
-    path.cubicTo(size.width * 0.13, size.height * 0.47, size.width * 0.13,
-        size.height * 0.53, size.width * 0.13, size.height * 0.53);
-    path.cubicTo(size.width * 0.13, size.height * 0.56, size.width * 0.13,
-        size.height * 0.58, size.width * 0.12, size.height * 0.58);
-    path.cubicTo(size.width * 0.12, size.height * 0.58, size.width * 0.06,
-        size.height * 0.58, size.width * 0.06, size.height * 0.58);
-    path.cubicTo(size.width * 0.06, size.height * 0.58, size.width * 0.06,
-        size.height * 0.58, size.width * 0.06, size.height * 0.58);
-    path.cubicTo(size.width * 0.05, size.height * 0.58, size.width * 0.04,
-        size.height * 0.61, size.width * 0.04, size.height * 0.63);
-    path.cubicTo(size.width * 0.04, size.height * 0.63, size.width * 0.04,
-        size.height * 0.64, size.width * 0.04, size.height * 0.64);
-    path.cubicTo(size.width * 0.04, size.height * 0.64, size.width * 0.04,
-        size.height, size.width * 0.04, size.height);
-    path.cubicTo(size.width * 0.04, size.height, size.width * 0.04, size.height,
-        size.width * 0.04, size.height);
-    path.cubicTo(
-        size.width * 0.04, size.height, 0, size.height, 0, size.height);
-    path.cubicTo(0, size.height, 0, size.height, 0, size.height);
-    path.cubicTo(0, size.height, 0, size.height * 0.53, 0, size.height * 0.53);
-    path.cubicTo(
-        0, size.height * 0.53, 0, size.height * 0.47, 0, size.height * 0.47);
-    path.cubicTo(
-        0, size.height * 0.47, 0, size.height * 0.17, 0, size.height * 0.17);
-    path.cubicTo(
-        0, size.height * 0.17, 0, size.height * 0.17, 0, size.height * 0.17);
-    path.cubicTo(
-        0, size.height * 0.17, 0, size.height * 0.17, 0, size.height * 0.17);
-    path.cubicTo(
-        0, size.height * 0.08, size.width * 0.02, 0, size.width * 0.04, 0);
-    path.cubicTo(
-        size.width * 0.04, 0, size.width * 0.05, 0, size.width * 0.05, 0);
-    path.cubicTo(
-        size.width * 0.05, 0, size.width * 0.05, 0, size.width * 0.05, 0);
-    path.cubicTo(
-        size.width * 0.05, 0, size.width * 0.16, 0, size.width * 0.16, 0);
-    canvas.drawPath(path, paint);
-
-    // r symbol
-    paint.color = const Color(0xff1f1f1f);
-    path = Path();
-    path.lineTo(size.width * 0.29, size.height * 0.38);
-    path.cubicTo(size.width * 0.29, size.height * 0.38, size.width * 0.29,
-        size.height * 0.46, size.width * 0.29, size.height * 0.46);
-    path.cubicTo(size.width * 0.29, size.height * 0.48, size.width * 0.29,
-        size.height / 2, size.width * 0.28, size.height / 2);
-    path.cubicTo(size.width * 0.28, size.height / 2, size.width * 0.27,
-        size.height / 2, size.width * 0.27, size.height / 2);
-    path.cubicTo(size.width * 0.27, size.height / 2, size.width * 0.27,
-        size.height / 2, size.width * 0.27, size.height / 2);
-    path.cubicTo(size.width * 0.24, size.height / 2, size.width * 0.22,
-        size.height * 0.58, size.width * 0.22, size.height * 0.67);
-    path.cubicTo(size.width * 0.22, size.height * 0.67, size.width * 0.22,
-        size.height * 0.7, size.width * 0.22, size.height * 0.7);
-    path.cubicTo(size.width * 0.22, size.height * 0.7, size.width * 0.22,
-        size.height * 0.7, size.width * 0.22, size.height * 0.7);
-    path.cubicTo(size.width * 0.22, size.height * 0.71, size.width * 0.22,
-        size.height * 0.71, size.width * 0.22, size.height * 0.71);
-    path.cubicTo(size.width * 0.22, size.height * 0.71, size.width * 0.22,
-        size.height, size.width * 0.22, size.height);
-    path.cubicTo(size.width * 0.22, size.height, size.width * 0.22, size.height,
-        size.width * 0.22, size.height);
-    path.cubicTo(size.width * 0.22, size.height, size.width * 0.18, size.height,
-        size.width * 0.18, size.height);
-    path.cubicTo(size.width * 0.18, size.height, size.width * 0.18, size.height,
-        size.width * 0.18, size.height);
-    path.cubicTo(size.width * 0.18, size.height, size.width * 0.18,
-        size.height * 0.44, size.width * 0.18, size.height * 0.44);
-    path.cubicTo(size.width * 0.18, size.height * 0.38, size.width * 0.19,
-        size.height * 0.34, size.width / 5, size.height * 0.34);
-    path.cubicTo(size.width / 5, size.height * 0.34, size.width * 0.22,
-        size.height * 0.34, size.width * 0.22, size.height * 0.34);
-    path.cubicTo(size.width * 0.22, size.height * 0.34, size.width * 0.22,
-        size.height * 0.4, size.width * 0.22, size.height * 0.4);
-    path.cubicTo(size.width * 0.23, size.height * 0.34, size.width / 4,
-        size.height * 0.34, size.width * 0.26, size.height * 0.34);
-    path.cubicTo(size.width * 0.26, size.height * 0.34, size.width * 0.28,
-        size.height * 0.34, size.width * 0.28, size.height * 0.34);
-    path.cubicTo(size.width * 0.29, size.height * 0.34, size.width * 0.29,
-        size.height * 0.35, size.width * 0.29, size.height * 0.38);
-    path.cubicTo(size.width * 0.29, size.height * 0.38, size.width * 0.29,
-        size.height * 0.38, size.width * 0.29, size.height * 0.38);
-    canvas.drawPath(path, paint);
-
+  void paint(Canvas canvas, Size size) {
     // i base symbol
     canvas.drawRRect(
         RRect.fromLTRBAndCorners(
-          size.width * 253 / 762,
+          size.width * 249 / 762,
           size.height * (205 - 135) / 205 * iRectHeight,
           size.width * 282 / 762,
           size.height,
@@ -983,248 +868,43 @@ class FriflexPainter extends CustomPainter {
           topRight: Radius.circular(size.width * 0.01),
         ),
         Paint()
-          ..color = Colors.black
+          ..color = iRectColor
           ..style = PaintingStyle.fill);
 
-    canvas.save();
-    //refactor scaling
-    final iPointSymbolScale1 = (iPointSymbolHeight + 4) * 0.25;
-    void rotate(
-        {required Canvas canvas,
-        required double cx,
-        required double cy,
-        required double angle}) {
-      canvas.translate(cx, cy);
-      canvas.rotate(angle);
-      canvas.scale(iPointSymbolScale1);
-      canvas.translate(-cx, -cy);
-    }
+    // i dot symbol
+    final iPointSymbolScale = (iPointSymbolHeight + 4) * 0.25;
 
-    final radius = size.width * ((282 - 253) / 2 / 762);
+    canvas.save();
+
+    final radius = size.width * ((282 - 249) / 2 / 762);
     final diagonal = radius - 1 / 2 * radius * (sqrt(2.0) - 1);
 
     canvas.translate(
         0,
         iPointSymbolHeight * ((size.height * (205 - 135) / 205)) -
-            diagonal * iPointSymbolScale1);
+            diagonal * iPointSymbolScale);
 
-    rotate(
-        canvas: canvas,
-        cx: size.width * (253 + (282 - 253) / 2) / 762,
-        cy: 0,
-        angle: 45 * pi / 180 * iPointSymbolRotation);
+    canvas.translate(size.width * (249 + (282 - 249) / 2) / 762, 0);
+    canvas.rotate(45 * pi / 180 * iPointSymbolRotation);
+    canvas.scale(iPointSymbolScale);
+    canvas.translate(-size.width * (249 + (282 - 249) / 2) / 762, 0);
 
-    // i dot symbol
     canvas.drawRRect(
         RRect.fromRectAndRadius(
-            Rect.fromCircle(
-              center: Offset(size.width * (253 + (282 - 253) / 2) / 762, 0),
-              radius: diagonal,
-            ),
-            Radius.circular(size.width * 0.007)),
+          Rect.fromCircle(
+            center: Offset(size.width * (249 + (282 - 249) / 2) / 762, 0),
+            radius: diagonal,
+          ),
+          Radius.circular(size.width * 0.012),
+        ),
         Paint()
-          ..color = const Color(0xff685bc7).withOpacity(iPointSymbolOpacity)
+          ..color = dotColor.withOpacity(iPointSymbolOpacity)
           ..style = PaintingStyle.fill);
-    canvas.restore();
-
-    // f symbol
-    paint.color = const Color(0xff1f1f1f);
-    path = Path();
-    path.lineTo(size.width * 0.49, size.height * 0.17);
-    path.cubicTo(size.width * 0.49, size.height * 0.17, size.width * 0.49,
-        size.height * 0.17, size.width * 0.49, size.height * 0.17);
-    path.cubicTo(size.width * 0.49, size.height * 0.17, size.width * 0.51,
-        size.height * 0.17, size.width * 0.51, size.height * 0.17);
-    path.cubicTo(size.width * 0.52, size.height * 0.17, size.width * 0.52,
-        size.height * 0.15, size.width * 0.52, size.height * 0.12);
-    path.cubicTo(size.width * 0.52, size.height * 0.12, size.width * 0.52,
-        size.height * 0.05, size.width * 0.52, size.height * 0.05);
-    path.cubicTo(size.width * 0.52, size.height * 0.03, size.width * 0.52, 0,
-        size.width * 0.51, 0);
-    path.cubicTo(
-        size.width * 0.51, 0, size.width * 0.48, 0, size.width * 0.48, 0);
-    path.cubicTo(
-        size.width * 0.48, 0, size.width * 0.48, 0, size.width * 0.48, 0);
-    path.cubicTo(
-        size.width * 0.48, 0, size.width * 0.48, 0, size.width * 0.48, 0);
-    path.cubicTo(size.width * 0.45, 0, size.width * 0.43, size.height * 0.08,
-        size.width * 0.43, size.height * 0.17);
-    path.cubicTo(size.width * 0.43, size.height * 0.17, size.width * 0.43,
-        size.height * 0.34, size.width * 0.43, size.height * 0.34);
-    path.cubicTo(size.width * 0.43, size.height * 0.34, size.width * 0.42,
-        size.height * 0.34, size.width * 0.42, size.height * 0.34);
-    path.cubicTo(size.width * 0.41, size.height * 0.34, size.width * 0.41,
-        size.height * 0.36, size.width * 0.41, size.height * 0.38);
-    path.cubicTo(size.width * 0.41, size.height * 0.38, size.width * 0.41,
-        size.height * 0.45, size.width * 0.41, size.height * 0.45);
-    path.cubicTo(size.width * 0.41, size.height * 0.48, size.width * 0.41,
-        size.height / 2, size.width * 0.42, size.height / 2);
-    path.cubicTo(size.width * 0.42, size.height / 2, size.width * 0.42,
-        size.height / 2, size.width * 0.42, size.height / 2);
-    path.cubicTo(size.width * 0.42, size.height / 2, size.width * 0.42,
-        size.height / 2, size.width * 0.42, size.height / 2);
-    path.cubicTo(size.width * 0.43, size.height / 2, size.width * 0.43,
-        size.height * 0.52, size.width * 0.43, size.height * 0.55);
-    path.cubicTo(size.width * 0.43, size.height * 0.55, size.width * 0.43,
-        size.height * 0.55, size.width * 0.43, size.height * 0.55);
-    path.cubicTo(size.width * 0.43, size.height * 0.55, size.width * 0.43,
-        size.height, size.width * 0.43, size.height);
-    path.cubicTo(size.width * 0.43, size.height, size.width * 0.44, size.height,
-        size.width * 0.44, size.height);
-    path.cubicTo(size.width * 0.44, size.height, size.width * 0.48, size.height,
-        size.width * 0.48, size.height);
-    path.cubicTo(size.width * 0.48, size.height, size.width * 0.48, size.height,
-        size.width * 0.48, size.height);
-    path.cubicTo(size.width * 0.48, size.height, size.width * 0.48,
-        size.height * 0.55, size.width * 0.48, size.height * 0.55);
-    path.cubicTo(size.width * 0.48, size.height * 0.55, size.width * 0.48,
-        size.height * 0.55, size.width * 0.48, size.height * 0.55);
-    path.cubicTo(size.width * 0.48, size.height * 0.52, size.width * 0.49,
-        size.height / 2, size.width * 0.49, size.height / 2);
-    path.cubicTo(size.width * 0.49, size.height / 2, size.width * 0.49,
-        size.height / 2, size.width * 0.49, size.height / 2);
-    path.cubicTo(size.width * 0.49, size.height / 2, size.width * 0.51,
-        size.height / 2, size.width * 0.51, size.height / 2);
-    path.cubicTo(size.width * 0.52, size.height / 2, size.width * 0.52,
-        size.height * 0.48, size.width * 0.52, size.height * 0.45);
-    path.cubicTo(size.width * 0.52, size.height * 0.45, size.width * 0.52,
-        size.height * 0.38, size.width * 0.52, size.height * 0.38);
-    path.cubicTo(size.width * 0.52, size.height * 0.36, size.width * 0.52,
-        size.height * 0.34, size.width * 0.51, size.height * 0.34);
-    path.cubicTo(size.width * 0.51, size.height * 0.34, size.width * 0.48,
-        size.height * 0.34, size.width * 0.48, size.height * 0.34);
-    path.cubicTo(size.width * 0.48, size.height * 0.34, size.width * 0.48,
-        size.height * 0.22, size.width * 0.48, size.height * 0.22);
-    path.cubicTo(size.width * 0.48, size.height * 0.22, size.width * 0.48,
-        size.height * 0.22, size.width * 0.48, size.height * 0.22);
-    path.cubicTo(size.width * 0.48, size.height * 0.19, size.width * 0.49,
-        size.height * 0.17, size.width * 0.49, size.height * 0.17);
-    path.cubicTo(size.width * 0.49, size.height * 0.17, size.width * 0.49,
-        size.height * 0.17, size.width * 0.49, size.height * 0.17);
-    canvas.drawPath(path, paint);
-
-    // l symbol
-    paint.color = const Color(0xff1f1f1f);
-    path = Path();
-    path.lineTo(size.width * 0.56, size.height * 0.05);
-    path.cubicTo(size.width * 0.56, size.height * 0.03, size.width * 0.57, 0,
-        size.width * 0.57, 0);
-    path.cubicTo(
-        size.width * 0.57, 0, size.width * 0.59, 0, size.width * 0.59, 0);
-    path.cubicTo(size.width * 0.6, 0, size.width * 0.6, size.height * 0.03,
-        size.width * 0.6, size.height * 0.05);
-    path.cubicTo(size.width * 0.6, size.height * 0.05, size.width * 0.6,
-        size.height, size.width * 0.6, size.height);
-    path.cubicTo(size.width * 0.6, size.height, size.width * 0.6, size.height,
-        size.width * 0.6, size.height);
-    path.cubicTo(size.width * 0.6, size.height, size.width * 0.56, size.height,
-        size.width * 0.56, size.height);
-    path.cubicTo(size.width * 0.56, size.height, size.width * 0.56, size.height,
-        size.width * 0.56, size.height);
-    path.cubicTo(size.width * 0.56, size.height, size.width * 0.56,
-        size.height * 0.05, size.width * 0.56, size.height * 0.05);
-    canvas.drawPath(path, paint);
-
-    // e symbol
-    paint.color = const Color(0xff1f1f1f);
-    path = Path();
-    path.moveTo(size.width * 0.73, size.height * 0.84);
-    path.cubicTo(size.width * 0.74, size.height * 0.84, size.width * 0.75,
-        size.height * 0.82, size.width * 0.76, size.height * 0.8);
-    path.cubicTo(size.width * 0.76, size.height * 0.8, size.width * 0.76,
-        size.height * 0.8, size.width * 0.76, size.height * 0.8);
-    path.cubicTo(size.width * 0.76, size.height * 0.8, size.width * 0.79,
-        size.height * 0.86, size.width * 0.79, size.height * 0.86);
-    path.cubicTo(size.width * 0.79, size.height * 0.86, size.width * 0.8,
-        size.height * 0.88, size.width * 0.79, size.height * 0.89);
-    path.cubicTo(size.width * 0.78, size.height * 0.94, size.width * 0.76,
-        size.height, size.width * 0.73, size.height);
-    path.cubicTo(size.width * 0.68, size.height, size.width * 0.64,
-        size.height * 0.85, size.width * 0.64, size.height * 0.67);
-    path.cubicTo(size.width * 0.64, size.height * 0.49, size.width * 0.68,
-        size.height * 0.34, size.width * 0.73, size.height * 0.34);
-    path.cubicTo(size.width * 0.77, size.height * 0.34, size.width * 0.81,
-        size.height * 0.49, size.width * 0.81, size.height * 0.67);
-    path.cubicTo(size.width * 0.81, size.height * 0.68, size.width * 0.81,
-        size.height * 0.7, size.width * 0.81, size.height * 0.71);
-    path.cubicTo(size.width * 0.81, size.height * 0.72, size.width * 0.81,
-        size.height * 0.73, size.width * 0.81, size.height * 0.73);
-    path.cubicTo(size.width * 0.81, size.height * 0.73, size.width * 0.68,
-        size.height * 0.73, size.width * 0.68, size.height * 0.73);
-    path.cubicTo(size.width * 0.68, size.height * 0.73, size.width * 0.68,
-        size.height * 0.74, size.width * 0.68, size.height * 0.74);
-    path.cubicTo(size.width * 0.69, size.height * 0.8, size.width * 0.71,
-        size.height * 0.84, size.width * 0.73, size.height * 0.84);
-    path.cubicTo(size.width * 0.73, size.height * 0.84, size.width * 0.73,
-        size.height * 0.84, size.width * 0.73, size.height * 0.84);
-    path.lineTo(size.width * 0.68, size.height * 0.6);
-    path.cubicTo(size.width * 0.68, size.height * 0.6, size.width * 0.68,
-        size.height * 0.61, size.width * 0.68, size.height * 0.61);
-    path.cubicTo(size.width * 0.68, size.height * 0.61, size.width * 0.77,
-        size.height * 0.61, size.width * 0.77, size.height * 0.61);
-    path.cubicTo(size.width * 0.77, size.height * 0.61, size.width * 0.77,
-        size.height * 0.6, size.width * 0.77, size.height * 0.6);
-    path.cubicTo(size.width * 0.76, size.height * 0.54, size.width * 0.74,
-        size.height * 0.49, size.width * 0.73, size.height * 0.49);
-    path.cubicTo(size.width * 0.71, size.height * 0.49, size.width * 0.69,
-        size.height * 0.54, size.width * 0.68, size.height * 0.6);
-    path.cubicTo(size.width * 0.68, size.height * 0.6, size.width * 0.68,
-        size.height * 0.6, size.width * 0.68, size.height * 0.6);
-    canvas.drawPath(path, paint);
-
-    // x symbol
-    paint.color = const Color(0xff1f1f1f);
-    path = Path();
-    path.lineTo(size.width * 0.84, size.height * 0.34);
-    path.cubicTo(size.width * 0.83, size.height * 0.34, size.width * 0.83,
-        size.height * 0.38, size.width * 0.83, size.height * 0.41);
-    path.cubicTo(size.width * 0.83, size.height * 0.41, size.width * 0.88,
-        size.height * 0.67, size.width * 0.88, size.height * 0.67);
-    path.cubicTo(size.width * 0.88, size.height * 0.67, size.width * 0.82,
-        size.height * 0.98, size.width * 0.82, size.height * 0.98);
-    path.cubicTo(size.width * 0.82, size.height, size.width * 0.82, size.height,
-        size.width * 0.82, size.height);
-    path.cubicTo(size.width * 0.82, size.height, size.width * 0.87, size.height,
-        size.width * 0.87, size.height);
-    path.cubicTo(size.width * 0.87, size.height, size.width * 0.87, size.height,
-        size.width * 0.87, size.height);
-    path.cubicTo(size.width * 0.87, size.height, size.width * 0.91,
-        size.height * 0.8, size.width * 0.91, size.height * 0.8);
-    path.cubicTo(size.width * 0.91, size.height * 0.8, size.width * 0.95,
-        size.height, size.width * 0.95, size.height);
-    path.cubicTo(size.width * 0.95, size.height, size.width * 0.95, size.height,
-        size.width * 0.95, size.height);
-    path.cubicTo(size.width * 0.95, size.height, size.width, size.height,
-        size.width, size.height);
-    path.cubicTo(size.width, size.height, size.width, size.height, size.width,
-        size.height * 0.98);
-    path.cubicTo(size.width, size.height * 0.98, size.width * 0.94,
-        size.height * 0.67, size.width * 0.94, size.height * 0.67);
-    path.cubicTo(size.width * 0.94, size.height * 0.67, size.width,
-        size.height * 0.41, size.width, size.height * 0.41);
-    path.cubicTo(size.width, size.height * 0.38, size.width, size.height * 0.34,
-        size.width * 0.98, size.height * 0.34);
-    path.cubicTo(size.width * 0.98, size.height * 0.34, size.width * 0.96,
-        size.height * 0.34, size.width * 0.96, size.height * 0.34);
-    path.cubicTo(size.width * 0.95, size.height * 0.34, size.width * 0.95,
-        size.height * 0.34, size.width * 0.95, size.height * 0.36);
-    path.cubicTo(size.width * 0.95, size.height * 0.36, size.width * 0.91,
-        size.height * 0.53, size.width * 0.91, size.height * 0.53);
-    path.cubicTo(size.width * 0.91, size.height * 0.53, size.width * 0.87,
-        size.height * 0.36, size.width * 0.87, size.height * 0.36);
-    path.cubicTo(size.width * 0.87, size.height * 0.34, size.width * 0.87,
-        size.height * 0.34, size.width * 0.86, size.height * 0.34);
-    path.cubicTo(size.width * 0.86, size.height * 0.34, size.width * 0.84,
-        size.height * 0.34, size.width * 0.84, size.height * 0.34);
-    canvas.drawPath(path, paint);
-
-    canvas.drawRect(Rect.fromLTRB(0, 0, size.width * 0, size.height * 1.1),
-        paint..blendMode = BlendMode.dstOut);
     canvas.restore();
   }
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
+    return false;
   }
 }

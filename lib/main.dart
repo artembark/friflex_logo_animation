@@ -10,13 +10,22 @@ class FriflexLogoAnimationApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: SafeArea(
         child: Scaffold(
           backgroundColor: Colors.white,
-          body: FriflexAnimatedLogo(
-            duration: Duration(
-              milliseconds: 1500,
+          body: Center(
+            child: Container(
+              decoration: const BoxDecoration(
+                  gradient: RadialGradient(
+                      radius: 0.3,
+                      center: Alignment.topLeft,
+                      colors: [Color(0xFFEBDAFF), Colors.white])),
+              child: const FriflexAnimatedLogo(
+                duration: Duration(
+                  milliseconds: 1500,
+                ),
+              ),
             ),
           ),
         ),
