@@ -17,7 +17,7 @@ class FriflexLogoAnimationApp extends StatelessWidget {
           body: Container(
             decoration: const BoxDecoration(
                 gradient: RadialGradient(
-                    radius: 0.3,
+                    radius: 0.7,
                     center: Alignment.topLeft,
                     colors: [Color(0xFFEBDAFF), Colors.white])),
             child: const Center(

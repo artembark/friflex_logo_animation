@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+
 import 'rectangle_part_painter.dart';
 
 class RectanglePart extends StatelessWidget {
