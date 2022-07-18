@@ -27,6 +27,11 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
   static const Color rectColor = Color(0xff685bc7);
   static const Color textColor = Colors.black;
 
+  //для Flutter Web, т.к. в нем нельзя устанавливать значение 0
+  //в blur sigmaX или sigmaY, открытая issue
+  //https://github.com/flutter/flutter/issues/89433
+  static const blurThreshold = 0.001;
+
   late AnimationController _transformController;
   late AnimationController _introController;
   late Animation _introScaleAnimation;
@@ -366,12 +371,6 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
 
   @override
   Widget build(BuildContext context) {
-    //для Flutter Web, т.к. в нем нельзя устанавливать значение 0
-    //в blur sigmaX или sigmaY, открытая issue
-    //https://github.com/flutter/flutter/issues/89433
-    final step1Moving = _step2BlurAnimation.value > 0.001;
-    final step0Moving = _step1BlurAnimation.value > 0.001;
-//replace setState with animatedBuilder
     return LayoutBuilder(builder: (context, constraints) {
       //расчеты для адаптивности
       final logoWidth = constraints.maxWidth;
@@ -398,6 +397,7 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
               height: logoHeight,
               child: Stack(
                 children: [
+                  //текст Friflex с нарисованной i
                   Positioned(
                     bottom: 0.0,
                     right: bigSquareSide / 2.0 + bigSquareDiagonalDiff,
@@ -416,6 +416,7 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
                       ),
                     ),
                   ),
+                  //появление и трансформация ромба
                   Positioned(
                     left: _step1RectPositionAnimation.value *
                         (logoWidth / 2 - bigSquareDiagonal / 2),
@@ -532,7 +533,8 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
                                           ),
                                         ),
                                       ),
-                                      if (step0Moving)
+                                      if (_step1BlurAnimation.value >
+                                          blurThreshold)
                                         ClipRect(
                                           //try to use ImageFilter instead
                                           child: BackdropFilter(
@@ -551,7 +553,8 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
                                             ),
                                           ),
                                         ),
-                                      if (step1Moving)
+                                      if (_step2BlurAnimation.value >
+                                          blurThreshold)
                                         ClipRect(
                                           child: BackdropFilter(
                                             filter: ImageFilter.blur(
@@ -559,8 +562,10 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
                                               sigmaY: _step2BlurAnimation.value,
                                             ),
                                             child: Container(
-                                              height: smallSquareSide * 1.1,
-                                              width: smallSquareSide * 1.1,
+                                              height: smallSquareSide *
+                                                  blurOversize,
+                                              width: smallSquareSide *
+                                                  blurOversize,
                                               color:
                                                   Colors.black.withOpacity(0),
                                             ),

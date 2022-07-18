@@ -1,7 +1,7 @@
 # Friflex Animated Logo  
 [Демонстрация работы](https://artembark.github.io/friflex_logo_animation/#/)   
 
-Анимированный логотип компании [Friflex)](https://friflex.com/)  
+Анимированный логотип компании [Friflex](https://friflex.com/)  
 
 Подстраивается под выделенный размер.  
 
