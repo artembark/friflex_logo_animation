@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:friflex_logo_animation/rectangle_glow.dart';
 import 'package:friflex_logo_animation/rectangle_small.dart';
 import 'friflex_text_logo.dart';
 import 'rectangle_part.dart';
@@ -22,6 +23,7 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
   static const startBlur = 0.0;
   static const finalBlur = 0.15;
   static const smallSquareScale = 3.5;
+  static const blurOversize = 1.1;
   static const Color rectColor = Color(0xff685bc7);
   static const Color textColor = Colors.black;
 
@@ -378,6 +380,7 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
       final bigSquareSide = bigSquareDiagonal / sqrt(2.0);
       final bigSquareDiagonalDiff = bigSquareSide / 2 * (sqrt(2.0) - 1);
       final smallSquareSide = bigSquareSide / smallSquareScale;
+      final halfBigSquareSide = bigSquareSide / 2.0;
       final borderRadius = smallSquareSide / 6.0;
       final horizontalDiagonalOffset =
           smallSquareSide * (1 + (sqrt(2) - 1)) * 0.9;
@@ -425,93 +428,99 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
                         child: Stack(
                           alignment: Alignment.center,
                           children: [
-                            Transform.translate(
-                              offset: Offset(
-                                horizontalDiagonalOffset *
-                                    _step4PositionAnimation.value,
-                                -smallSquareSide /
-                                    2.0 *
-                                    smallSquareScale *
-                                    _step3PositionAnimation.value,
+                            //верхний один
+                            if (_step5PositionAnimation.value > 0)
+                              Transform.translate(
+                                offset: Offset(
+                                    horizontalDiagonalOffset *
+                                        (_step4PositionAnimation.value +
+                                            _step5PositionAnimation.value),
+                                    -halfBigSquareSide *
+                                        _step3PositionAnimation.value),
+                                child: RectanglePart(
+                                  color: rectColor,
+                                  size: smallSquareSide,
+                                  borderRadius: borderRadius,
+                                  blurValue: _step5BlurAnimation.value,
+                                ),
                               ),
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  Transform.translate(
-                                    offset: Offset(
-                                        horizontalDiagonalOffset *
-                                            _step5PositionAnimation.value,
-                                        0),
-                                    child: RectanglePart(
-                                      color: rectColor,
-                                      size: smallSquareSide,
-                                      borderRadius: borderRadius,
-                                      blurValue: _step5BlurAnimation.value,
-                                    ),
-                                  ),
-                                  RectanglePart(
-                                    color: rectColor,
-                                    size: smallSquareSide,
-                                    borderRadius: borderRadius,
-                                    blurValue: _step4BlurAnimation.value,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Transform.translate(
-                              offset: Offset(
+                            //верхний из двух
+                            if (_step4PositionAnimation.value > 0)
+                              Transform.translate(
+                                offset: Offset(
                                   horizontalDiagonalOffset *
                                       _step4PositionAnimation.value,
-                                  0),
-                              child: RectanglePart(
-                                color: rectColor,
-                                size: smallSquareSide,
-                                borderRadius: borderRadius,
-                                blurValue: _step4BlurAnimation.value,
+                                  -halfBigSquareSide *
+                                      _step3PositionAnimation.value,
+                                ),
+                                child: RectanglePart(
+                                  color: rectColor,
+                                  size: smallSquareSide,
+                                  borderRadius: borderRadius,
+                                  blurValue: _step4BlurAnimation.value,
+                                ),
                               ),
-                            ),
-                            Transform.translate(
-                              offset: Offset(
-                                0,
-                                -smallSquareSide /
-                                    2.0 *
-                                    smallSquareScale *
-                                    _step3PositionAnimation.value,
+                            //нижний из двух
+                            if (_step4PositionAnimation.value > 0)
+                              Transform.translate(
+                                offset: Offset(
+                                    horizontalDiagonalOffset *
+                                        _step4PositionAnimation.value,
+                                    0),
+                                child: RectanglePart(
+                                  color: rectColor,
+                                  size: smallSquareSide,
+                                  borderRadius: borderRadius,
+                                  blurValue: _step4BlurAnimation.value,
+                                ),
                               ),
-                              child: RectangleSmall(
-                                color: rectColor,
-                                size: smallSquareSide,
-                                borderRadius: borderRadius,
-                                blurValue: _step3BlurAnimation.value,
+                            //верхний из трех
+                            if (_step3PositionAnimation.value > 0)
+                              Transform.translate(
+                                offset: Offset(
+                                  0,
+                                  -halfBigSquareSide *
+                                      _step3PositionAnimation.value,
+                                ),
+                                child: RectangleSmall(
+                                  color: rectColor,
+                                  size: smallSquareSide,
+                                  borderRadius: borderRadius,
+                                  blurValue: _step3BlurAnimation.value,
+                                ),
                               ),
-                            ),
-                            Transform.translate(
-                              offset: Offset(
-                                0,
-                                smallSquareSide /
-                                    2.0 *
-                                    smallSquareScale *
-                                    _step3PositionAnimation.value,
+                            //нижний из трех
+                            if (_step3PositionAnimation.value > 0)
+                              Transform.translate(
+                                offset: Offset(
+                                  0,
+                                  halfBigSquareSide *
+                                      _step3PositionAnimation.value,
+                                ),
+                                child: RectangleSmall(
+                                  color: rectColor,
+                                  size: smallSquareSide,
+                                  borderRadius: borderRadius,
+                                  blurValue: _step3BlurAnimation.value,
+                                ),
                               ),
-                              child: RectangleSmall(
-                                color: rectColor,
-                                size: smallSquareSide,
-                                borderRadius: borderRadius,
-                                blurValue: _step3BlurAnimation.value,
-                              ),
-                            ),
+                            //большой переходящий в маленький центральный
                             Transform.scale(
                               scale: _step2ScaleAnimation.value,
                               child: Transform.rotate(
                                 angle: pi / 4 + _introRotationAnimation.value,
                                 child: SizedBox(
-                                  height: smallSquareSide * 1.1,
-                                  width: smallSquareSide * 1.1,
+                                  height: smallSquareSide * blurOversize,
+                                  width: smallSquareSide * blurOversize,
                                   child: Stack(
                                     alignment: Alignment.center,
                                     children: [
-                                      Transform.scale(
-                                        scale: _introGlowSizeAnimation.value,
+                                      RectangleGlow(
+                                        glowSize: _introGlowSizeAnimation,
+                                        glowOpacity: _introGlowOpacityAnimation,
+                                        color: rectColor,
+                                        size: smallSquareSide,
+                                        borderRadius: borderRadius,
                                         child: Container(
                                           height: smallSquareSide,
                                           width: smallSquareSide,
@@ -519,20 +528,8 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
                                             borderRadius: BorderRadius.circular(
                                               borderRadius,
                                             ),
-                                            color: rectColor.withOpacity(
-                                                _introGlowOpacityAnimation
-                                                    .value),
+                                            color: rectColor,
                                           ),
-                                        ),
-                                      ),
-                                      Container(
-                                        height: smallSquareSide,
-                                        width: smallSquareSide,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            borderRadius,
-                                          ),
-                                          color: rectColor,
                                         ),
                                       ),
                                       if (step0Moving)
@@ -545,8 +542,10 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
                                                 sigmaY:
                                                     _step1BlurAnimation.value),
                                             child: Container(
-                                              height: smallSquareSide * 1.1,
-                                              width: smallSquareSide * 1.1,
+                                              height: smallSquareSide *
+                                                  blurOversize,
+                                              width: smallSquareSide *
+                                                  blurOversize,
                                               color:
                                                   Colors.black.withOpacity(0),
                                             ),
