@@ -46,4 +46,24 @@ class LogoAnimation {
       ),
     );
   }
+
+  Animation<double> intervalTween({
+    required AnimationController controller,
+    required Curve curve,
+    required double tweenBegin,
+    required double tweenEnd,
+    required double intervalBegin,
+    required double intervalEnd,
+  }) {
+    return Tween<double>(begin: tweenBegin, end: tweenEnd).animate(
+      CurvedAnimation(
+        parent: controller,
+        curve: Interval(
+          intervalBegin,
+          intervalEnd,
+          curve: curve,
+        ),
+      ),
+    );
+  }
 }

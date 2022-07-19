@@ -38,7 +38,9 @@ class _FriflexLogoAnimationPageState extends State<FriflexLogoAnimationPage> {
         child: Center(
           child: FriflexAnimatedLogo(
             key: logoKey,
-            duration: Duration(milliseconds: duration),
+            duration: Duration(
+              milliseconds: duration,
+            ),
           ),
         ),
       ),
@@ -89,9 +91,7 @@ class _FriflexLogoAnimationPageState extends State<FriflexLogoAnimationPage> {
                 ),
                 Text(
                   AppConst.settingsButtonText,
-                  style: TextStyle(
-                    color: AppTheme.textColor,
-                  ),
+                  style: AppTheme.menuButtonTextStyle,
                 ),
               ],
             ),
@@ -99,38 +99,56 @@ class _FriflexLogoAnimationPageState extends State<FriflexLogoAnimationPage> {
               return [
                 const PopupMenuItem<int>(
                   value: AppConst.pmSourceButtonIndex,
-                  child: Text(AppConst.sourceButtonText),
+                  child: Text(
+                    AppConst.sourceButtonText,
+                  ),
                 ),
                 const PopupMenuItem<int>(
                   value: AppConst.pmNormalSpeedButtonIndex,
-                  child: Text(AppConst.normalSpeedButtonText),
+                  child: Text(
+                    AppConst.normalSpeedButtonText,
+                  ),
                 ),
                 const PopupMenuItem<int>(
                   value: AppConst.pmSlowSpeedButtonIndex,
-                  child: Text(AppConst.slowSpeedButtonText),
+                  child: Text(
+                    AppConst.slowSpeedButtonText,
+                  ),
                 ),
                 PopupMenuItem<int>(
                   value: AppConst.pmSliderVisibilityButtonIndex,
                   child: sliderVisible
-                      ? const Text(AppConst.hideSliderButtonText)
-                      : const Text(AppConst.showSliderButtonText),
+                      ? const Text(
+                          AppConst.hideSliderButtonText,
+                        )
+                      : const Text(
+                          AppConst.showSliderButtonText,
+                        ),
                 ),
               ];
             },
             onSelected: (value) {
               switch (value) {
                 case AppConst.pmSourceButtonIndex:
-                  _launchUrl(_url);
+                  _launchUrl(
+                    _url,
+                  );
                   break;
                 case AppConst.pmNormalSpeedButtonIndex:
-                  setDurationReset(duration: AppConst.normalDuration);
+                  setDurationReset(
+                    duration: AppConst.normalDuration,
+                  );
                   break;
                 case AppConst.pmSlowSpeedButtonIndex:
-                  setDurationReset(duration: AppConst.slowDuration);
+                  setDurationReset(
+                    duration: AppConst.slowDuration,
+                  );
                   break;
                 case AppConst.pmSliderVisibilityButtonIndex:
                   if (sliderVisible) {
-                    setDurationReset(duration: AppConst.normalDuration);
+                    setDurationReset(
+                      duration: AppConst.normalDuration,
+                    );
                   } else {
                     setState(() {
                       sliderVisible = true;
@@ -152,12 +170,15 @@ class _FriflexLogoAnimationPageState extends State<FriflexLogoAnimationPage> {
     setState(() {
       sliderVisible = false;
     });
-    logoKey.currentState?.transformController.duration =
-        Duration(milliseconds: duration);
-    logoKey.currentState?.introController.duration =
-        Duration(milliseconds: duration * 2);
+    logoKey.currentState?.transformController.duration = Duration(
+      milliseconds: duration,
+    );
+    logoKey.currentState?.introController.duration = Duration(
+      milliseconds: duration * 2,
+    );
     logoKey.currentState?.transformController.reset();
-    logoKey.currentState?.introController
-        .forward(from: AppConst.animationInitialValue);
+    logoKey.currentState?.introController.forward(
+      from: AppConst.animationInitialValue,
+    );
   }
 }

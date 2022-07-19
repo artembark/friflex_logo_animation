@@ -24,4 +24,8 @@ abstract class AppTheme {
     ),
   );
   static const EdgeInsets popupMenuButtonPadding = EdgeInsets.only(right: 16.0);
+  static const TextStyle menuButtonTextStyle = TextStyle(
+    color: AppTheme.textColor,
+    fontWeight: FontWeight.bold,
+  );
 }

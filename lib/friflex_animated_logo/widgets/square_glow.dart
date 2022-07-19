@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:friflex_logo_animation/friflex_animated_logo/animations/logo_animation.dart';
 
 class SquareGlow extends StatefulWidget {
   ///Виджет, создающий затухающую цветную волну от квадратного контейнера.
@@ -34,29 +35,22 @@ class _SquareGlowState extends State<SquareGlow> {
   void initState() {
     super.initState();
 
-    _introGlowOpacityAnimation = Tween<double>(begin: 0.3, end: 0.0)
-        .chain(CurveTween(curve: Curves.ease))
-        .animate(
-          CurvedAnimation(
-            parent: widget.controller,
-            curve: const Interval(
-              0.5,
-              1.0,
-            ),
-          ),
-        );
-
-    _introGlowSizeAnimation = Tween<double>(begin: 1.0, end: widget.scaleFactor)
-        .chain(CurveTween(curve: Curves.ease))
-        .animate(
-          CurvedAnimation(
-            parent: widget.controller,
-            curve: const Interval(
-              0.5,
-              1.0,
-            ),
-          ),
-        );
+    _introGlowOpacityAnimation = LogoAnimation().intervalTween(
+      controller: widget.controller,
+      curve: Curves.ease,
+      tweenBegin: 0.3,
+      tweenEnd: 0.0,
+      intervalBegin: 0.5,
+      intervalEnd: 1.0,
+    );
+    _introGlowSizeAnimation = LogoAnimation().intervalTween(
+      controller: widget.controller,
+      curve: Curves.ease,
+      tweenBegin: 1.0,
+      tweenEnd: widget.scaleFactor,
+      intervalBegin: 0.5,
+      intervalEnd: 1.0,
+    );
   }
 
   @override
@@ -76,8 +70,9 @@ class _SquareGlowState extends State<SquareGlow> {
                   borderRadius: BorderRadius.circular(
                     widget.borderRadius,
                   ),
-                  color: widget.color
-                      .withOpacity(_introGlowOpacityAnimation.value),
+                  color: widget.color.withOpacity(
+                    _introGlowOpacityAnimation.value,
+                  ),
                 ),
               ),
             ),

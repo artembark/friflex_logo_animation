@@ -9,6 +9,10 @@ class FriflexIPainter extends CustomPainter {
   final double iDotRotation;
   final double iRectHeight;
 
+  ///Виджет отрисовки на canvas буквы i в виде прямоугольника с закругленными
+  ///краями сверху и ромба над ним. Высота прямоугольника определяется
+  ///параметром [iRectHeight], положение ромба [iDotYPosition],
+  ///вращение ромба [iDotRotation], прозрачность ромба [iDotOpacity]
   FriflexIPainter({
     required this.iDotOpacity,
     required this.iDotRotation,

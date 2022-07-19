@@ -8,6 +8,7 @@ import 'package:friflex_logo_animation/friflex_animated_logo/widgets/square_blur
 import 'square_glow.dart';
 
 class SquareBigToSmall extends StatefulWidget {
+  ///Виджет анимации появления с вращением большого ромба и его уменьшения
   const SquareBigToSmall({
     Key? key,
     required this.introController,
@@ -26,6 +27,7 @@ class SquareBigToSmall extends StatefulWidget {
 }
 
 class _SquareBigToSmallState extends State<SquareBigToSmall> {
+  late Animation _introScaleAnimation;
   late Animation _introRotationAnimation;
   late Animation _step1BlurAnimation;
   late Animation _step2BlurAnimation;
@@ -34,38 +36,46 @@ class _SquareBigToSmallState extends State<SquareBigToSmall> {
   @override
   void initState() {
     super.initState();
-    _introRotationAnimation = Tween<double>(begin: -2 * pi, end: 0.0)
-        .chain(CurveTween(curve: Curves.easeOutBack))
-        .animate(
-          CurvedAnimation(
-            parent: widget.introController,
-            curve: const Interval(
-              0.0,
-              0.5,
-            ),
-          ),
-        );
+    _introScaleAnimation = LogoAnimation().intervalTween(
+      controller: widget.introController,
+      curve: Curves.elasticOut,
+      tweenBegin: 0.0,
+      tweenEnd: 1.0,
+      intervalBegin: 0.0,
+      intervalEnd: 0.5,
+    );
+    _introRotationAnimation = LogoAnimation().intervalTween(
+      controller: widget.introController,
+      curve: Curves.easeOutBack,
+      tweenBegin: -2.0 * pi,
+      tweenEnd: 0.0,
+      intervalBegin: 0.0,
+      intervalEnd: 0.5,
+    );
     _step1BlurAnimation = LogoAnimation().squareBlurAnimation(
-        controller: widget.transformController, begin: 0.0, end: 0.2);
-    _step2ScaleAnimation =
-        Tween<double>(begin: LogoConst.smallSquareScale, end: 1.0).animate(
-      CurvedAnimation(
-        parent: widget.transformController,
-        curve: const Interval(
-          0.2,
-          0.4,
-          curve: Curves.easeIn,
-        ),
-      ),
+      controller: widget.transformController,
+      begin: 0.0,
+      end: 0.2,
+    );
+    _step2ScaleAnimation = LogoAnimation().intervalTween(
+      controller: widget.transformController,
+      curve: Curves.easeIn,
+      tweenBegin: LogoConst.smallSquareScale,
+      tweenEnd: 1.0,
+      intervalBegin: 0.2,
+      intervalEnd: 0.4,
     );
     _step2BlurAnimation = LogoAnimation().squareBlurAnimation(
-        controller: widget.transformController, begin: 0.2, end: 0.4);
+      controller: widget.transformController,
+      begin: 0.2,
+      end: 0.4,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Transform.scale(
-      scale: _step2ScaleAnimation.value,
+      scale: _step2ScaleAnimation.value * _introScaleAnimation.value,
       child: Transform.rotate(
         angle: LogoConst.squareRotation + _introRotationAnimation.value,
         child: SizedBox(

@@ -1,16 +1,21 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:friflex_logo_animation/friflex_animated_logo/animations/logo_animation.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
 import 'widgets/friflex_animated_f_symbol.dart';
 import 'widgets/friflex_animated_text.dart';
 
 class FriflexAnimatedLogo extends StatefulWidget {
+  ///Анимированный логотип Friflex, размер подстраивается под заданный родителем,
+  ///длительность анимации задается параметром [duration],
+  ///управлять контроллерами с родительского виджета можно передав ключ [key]
   const FriflexAnimatedLogo({
     Key? key,
     required this.duration,
   }) : super(key: key);
   final Duration duration;
+
   @override
   State<FriflexAnimatedLogo> createState() => FriflexAnimatedLogoState();
 }
@@ -29,16 +34,13 @@ class FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
     introController =
         AnimationController(vsync: this, duration: widget.duration * 2);
 
-    _step1SquarePositionAnimation =
-        Tween<double>(begin: 1.0, end: 62 / 862).animate(
-      CurvedAnimation(
-        parent: transformController,
-        curve: const Interval(
-          0.0,
-          0.2,
-          curve: Curves.easeIn,
-        ),
-      ),
+    _step1SquarePositionAnimation = LogoAnimation().intervalTween(
+      controller: transformController,
+      curve: Curves.easeIn,
+      tweenBegin: 1.0,
+      tweenEnd: 62 / 862,
+      intervalBegin: 0.0,
+      intervalEnd: 0.2,
     );
 
     introController.forward();
@@ -93,7 +95,7 @@ class FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
                       logoWidth: logoWidth,
                     ),
                   ),
-                  //появление и трансформация ромба
+                  //появление и трансформация ромба в F
                   Positioned(
                     left: _step1SquarePositionAnimation.value *
                         (logoWidth / 2.0 - logoHeight / 2.0),
