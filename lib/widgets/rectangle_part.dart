@@ -12,6 +12,7 @@ class RectanglePart extends StatelessWidget {
     required this.blurValue,
     required this.borderRadius,
     required this.color,
+    required this.offset,
   }) : super(key: key);
 
   static const rotation = pi / 4;
@@ -20,43 +21,47 @@ class RectanglePart extends StatelessWidget {
 
   final Color color;
   final double size;
+  final Offset offset;
   final double borderRadius;
   final double blurValue;
 
   @override
   Widget build(BuildContext context) {
     final bool isBlur = blurValue > blurThreshold;
-    return Transform.rotate(
-      angle: rotation,
-      child: SizedBox(
-        height: size * blurOversize,
-        width: size * blurOversize,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            SizedBox(
-              height: size,
-              width: size,
-              child: CustomPaint(
-                painter: RectanglePartPainter(
-                    borderRadius: borderRadius, color: color),
-              ),
-            ),
-            if (isBlur)
-              ClipRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(
-                    sigmaX: blurValue,
-                    sigmaY: blurValue,
-                  ),
-                  child: Container(
-                    height: size * blurOversize,
-                    width: size * blurOversize,
-                    color: Colors.black.withOpacity(0),
-                  ),
+    return Transform.translate(
+      offset: offset,
+      child: Transform.rotate(
+        angle: rotation,
+        child: SizedBox(
+          height: size * blurOversize,
+          width: size * blurOversize,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                height: size,
+                width: size,
+                child: CustomPaint(
+                  painter: RectanglePartPainter(
+                      borderRadius: borderRadius, color: color),
                 ),
               ),
-          ],
+              if (isBlur)
+                ClipRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(
+                      sigmaX: blurValue,
+                      sigmaY: blurValue,
+                    ),
+                    child: Container(
+                      height: size * blurOversize,
+                      width: size * blurOversize,
+                      color: Colors.black.withOpacity(0),
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

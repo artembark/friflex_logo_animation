@@ -10,33 +10,32 @@ class FriflexAnimatedLogo extends StatefulWidget {
     required this.duration,
   }) : super(key: key);
   final Duration duration;
-
   @override
-  State<FriflexAnimatedLogo> createState() => _FriflexAnimatedLogoState();
+  State<FriflexAnimatedLogo> createState() => FriflexAnimatedLogoState();
 }
 
-class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
+class FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
     with TickerProviderStateMixin {
   static const smallSquareScale = 3.5;
   static const Color rectColor = Color(0xff685bc7);
   static const Color textColor = Colors.black;
 
-  late AnimationController _transformController;
-  late AnimationController _introController;
+  late AnimationController transformController;
+  late AnimationController introController;
   late Animation _step1RectPositionAnimation;
 
   @override
   void initState() {
     super.initState();
-    _transformController =
+    transformController =
         AnimationController(vsync: this, duration: widget.duration);
-    _introController =
+    introController =
         AnimationController(vsync: this, duration: widget.duration * 2);
 
     _step1RectPositionAnimation =
         Tween<double>(begin: 1.0, end: 62 / 862).animate(
       CurvedAnimation(
-        parent: _transformController,
+        parent: transformController,
         curve: const Interval(
           0.0,
           0.2,
@@ -45,18 +44,18 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
       ),
     );
 
-    _introController.forward();
-    _introController.addStatusListener((status) {
+    introController.forward();
+    introController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        _transformController.forward();
+        transformController.forward();
       }
     });
   }
 
   @override
   void dispose() {
-    _transformController.dispose();
-    _introController.dispose();
+    transformController.dispose();
+    introController.dispose();
     super.dispose();
   }
 
@@ -78,8 +77,8 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
       return AnimatedBuilder(
           animation: Listenable.merge(
             [
-              _introController,
-              _transformController,
+              introController,
+              transformController,
             ],
           ),
           builder: (context, _) {
@@ -93,7 +92,7 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
                     bottom: 0.0,
                     right: bigSquareSide / 2.0 + bigSquareDiagonalDiff,
                     child: FriflexAnimatedText(
-                        controller: _transformController,
+                        controller: transformController,
                         logoWidth: logoWidth,
                         textColor: textColor,
                         rectColor: rectColor),
@@ -104,14 +103,15 @@ class _FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
                         (logoWidth / 2 - logoHeight / 2),
                     bottom: 0,
                     child: FriflexAnimatedFSymbol(
-                      introController: _introController,
-                      transformController: _transformController,
+                      introController: introController,
+                      transformController: transformController,
                       rectColor: rectColor,
                       rectBorderRadius: borderRadius,
                       bigSquareDiagonal: bigSquareDiagonal,
                       horizontalDiagonalOffset: horizontalDiagonalOffset,
                       halfBigSquareSide: halfBigSquareSide,
                       smallSquareSide: smallSquareSide,
+                      smallSquareScale: smallSquareScale,
                     ),
                   ),
                 ],
