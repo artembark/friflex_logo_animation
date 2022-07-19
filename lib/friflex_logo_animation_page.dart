@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:friflex_logo_animation/app/app_const.dart';
+import 'package:friflex_logo_animation/friflex_animated_logo/friflex_animated_logo.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'friflex_animated_logo.dart';
 
 class FriflexLogoAnimationPage extends StatefulWidget {
   const FriflexLogoAnimationPage({Key? key}) : super(key: key);
@@ -15,16 +15,14 @@ class _FriflexLogoAnimationPageState extends State<FriflexLogoAnimationPage> {
   GlobalKey<FriflexAnimatedLogoState> logoKey =
       GlobalKey<FriflexAnimatedLogoState>();
 
-  final Uri _url =
-      Uri.parse('https://github.com/artembark/friflex_logo_animation');
-  int duration = 1500;
-  double sliderValue = 0;
+  final Uri _url = Uri.parse(AppConst.sourceLink);
+  int duration = AppConst.normalDuration;
+  double sliderValue = AppConst.sliderInitValue;
   bool sliderVisible = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: Colors.white,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: sliderVisible ? buildAnimationSlider() : null,
@@ -59,9 +57,11 @@ class _FriflexLogoAnimationPageState extends State<FriflexLogoAnimationPage> {
       onChanged: (value) {
         if (value <= 1) {
           logoKey.currentState?.introController.value = value;
+          logoKey.currentState?.transformController.value = 0.0;
         }
         if (value >= 1) {
-          logoKey.currentState?.transformController.value = value - 1;
+          logoKey.currentState?.introController.value = 1.0;
+          logoKey.currentState?.transformController.value = value - 1.0;
         }
         setState(() {
           sliderValue = value;
@@ -84,27 +84,26 @@ class _FriflexLogoAnimationPageState extends State<FriflexLogoAnimationPage> {
           icon: const Icon(
             Icons.menu,
             color: Colors.black,
-            //size: 40,
           ),
           itemBuilder: (context) {
             return [
               const PopupMenuItem<int>(
                 value: 0,
-                child: Text("Исходный код"),
+                child: Text(AppConst.sourceButtonText),
               ),
               const PopupMenuItem<int>(
                 value: 1,
-                child: Text("Нормальная скорость"),
+                child: Text(AppConst.normalSpeedButtonText),
               ),
               const PopupMenuItem<int>(
                 value: 2,
-                child: Text("Замедленная скорость"),
+                child: Text(AppConst.slowSpeedButtonText),
               ),
               PopupMenuItem<int>(
                 value: 3,
                 child: sliderVisible
-                    ? const Text("Скрыть слайдер")
-                    : const Text("Показать слайдер"),
+                    ? const Text(AppConst.hideSliderButtonText)
+                    : const Text(AppConst.showSliderButtonText),
               ),
             ];
           },
@@ -116,16 +115,16 @@ class _FriflexLogoAnimationPageState extends State<FriflexLogoAnimationPage> {
               case 1:
                 setState(() {
                   sliderVisible = false;
-                  sliderValue = 0;
+                  sliderValue = AppConst.sliderInitValue;
                 });
-                setDurationReset(duration: 1500);
+                setDurationReset(duration: AppConst.normalDuration);
                 break;
               case 2:
                 setState(() {
                   sliderVisible = false;
-                  sliderValue = 0;
+                  sliderValue = AppConst.sliderInitValue;
                 });
-                setDurationReset(duration: 6000);
+                setDurationReset(duration: AppConst.slowDuration);
                 break;
               case 3:
                 if (!sliderVisible) {
@@ -133,7 +132,7 @@ class _FriflexLogoAnimationPageState extends State<FriflexLogoAnimationPage> {
                   logoKey.currentState?.introController.reset();
                 }
                 setState(() {
-                  sliderValue = 0;
+                  sliderValue = AppConst.sliderInitValue;
                   sliderVisible = !sliderVisible;
                 });
                 break;

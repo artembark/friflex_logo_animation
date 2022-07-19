@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
 import 'widgets/friflex_animated_f_symbol.dart';
 import 'widgets/friflex_animated_text.dart';
 
@@ -16,10 +17,6 @@ class FriflexAnimatedLogo extends StatefulWidget {
 
 class FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
     with TickerProviderStateMixin {
-  static const smallSquareScale = 3.5;
-  static const Color rectColor = Color(0xff685bc7);
-  static const Color textColor = Colors.black;
-
   late AnimationController transformController;
   late AnimationController introController;
   late Animation _step1RectPositionAnimation;
@@ -68,7 +65,7 @@ class FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
       final bigSquareDiagonal = logoHeight;
       final bigSquareSide = bigSquareDiagonal / sqrt(2.0);
       final bigSquareDiagonalDiff = bigSquareSide / 2 * (sqrt(2.0) - 1);
-      final smallSquareSide = bigSquareSide / smallSquareScale;
+      final smallSquareSide = bigSquareSide / LogoConst.smallSquareScale;
       final halfBigSquareSide = bigSquareSide / 2.0;
       final borderRadius = smallSquareSide / 6.0;
       final horizontalDiagonalOffset =
@@ -92,26 +89,23 @@ class FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
                     bottom: 0.0,
                     right: bigSquareSide / 2.0 + bigSquareDiagonalDiff,
                     child: FriflexAnimatedText(
-                        controller: transformController,
-                        logoWidth: logoWidth,
-                        textColor: textColor,
-                        rectColor: rectColor),
+                      controller: transformController,
+                      logoWidth: logoWidth,
+                    ),
                   ),
                   //появление и трансформация ромба
                   Positioned(
                     left: _step1RectPositionAnimation.value *
-                        (logoWidth / 2 - logoHeight / 2),
+                        (logoWidth / 2.0 - logoHeight / 2.0),
                     bottom: 0,
                     child: FriflexAnimatedFSymbol(
                       introController: introController,
                       transformController: transformController,
-                      rectColor: rectColor,
                       rectBorderRadius: borderRadius,
                       bigSquareDiagonal: bigSquareDiagonal,
                       horizontalDiagonalOffset: horizontalDiagonalOffset,
                       halfBigSquareSide: halfBigSquareSide,
                       smallSquareSide: smallSquareSide,
-                      smallSquareScale: smallSquareScale,
                     ),
                   ),
                 ],

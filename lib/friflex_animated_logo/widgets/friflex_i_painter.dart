@@ -1,22 +1,19 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
 
 class FriflexIPainter extends CustomPainter {
   final double iDotYPosition;
   final double iDotOpacity;
   final double iDotRotation;
   final double iRectHeight;
-  final Color iDotColor;
-  final Color iRectColor;
 
   FriflexIPainter({
     required this.iDotOpacity,
     required this.iDotRotation,
     required this.iDotYPosition,
-    required this.iDotColor,
     required this.iRectHeight,
-    required this.iRectColor,
   });
 
   @override
@@ -32,7 +29,7 @@ class FriflexIPainter extends CustomPainter {
           topRight: Radius.circular(size.width * 0.01),
         ),
         Paint()
-          ..color = iRectColor
+          ..color = LogoConst.textColor
           ..style = PaintingStyle.fill);
 
     // i dot symbol
@@ -62,7 +59,7 @@ class FriflexIPainter extends CustomPainter {
           Radius.circular(size.width * 0.012),
         ),
         Paint()
-          ..color = iDotColor.withOpacity(iDotOpacity)
+          ..color = LogoConst.rectColor.withOpacity(iDotOpacity)
           ..style = PaintingStyle.fill);
     canvas.restore();
   }

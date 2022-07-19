@@ -12,7 +12,7 @@ class FriflexLogoAnimationApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: appTheme,
+      theme: AppTheme.appTheme,
       home: const SafeArea(
         child: FriflexLogoAnimationPage(),
       ),

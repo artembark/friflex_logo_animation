@@ -1,7 +1,6 @@
-import 'dart:math';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
+import 'package:friflex_logo_animation/friflex_animated_logo/widgets/blur_overlay.dart';
 
 class RectangleSmall extends StatelessWidget {
   const RectangleSmall({
@@ -9,15 +8,9 @@ class RectangleSmall extends StatelessWidget {
     required this.blurValue,
     required this.size,
     required this.borderRadius,
-    required this.color,
     required this.offset,
   }) : super(key: key);
 
-  static const rotation = pi / 4;
-  static const blurOversize = 1.1;
-  static const blurThreshold = 0.001;
-
-  final Color color;
   final double size;
   final Offset offset;
   final double borderRadius;
@@ -25,14 +18,14 @@ class RectangleSmall extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isBlur = blurValue > blurThreshold;
+    final bool isBlur = blurValue > LogoConst.blurThreshold;
     return Transform.translate(
       offset: offset,
       child: Transform.rotate(
-        angle: rotation,
+        angle: LogoConst.rotation,
         child: SizedBox(
-          height: size * blurOversize,
-          width: size * blurOversize,
+          height: size * LogoConst.blurOversize,
+          width: size * LogoConst.blurOversize,
           child: Stack(
             alignment: Alignment.center,
             children: [
@@ -41,22 +34,9 @@ class RectangleSmall extends StatelessWidget {
                 width: size,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(borderRadius),
-                    color: color),
+                    color: LogoConst.rectColor),
               ),
-              if (isBlur)
-                ClipRect(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(
-                      sigmaX: blurValue,
-                      sigmaY: blurValue,
-                    ),
-                    child: Container(
-                      height: size * blurOversize,
-                      width: size * blurOversize,
-                      color: Colors.black.withOpacity(0),
-                    ),
-                  ),
-                )
+              if (isBlur) BlurOverlay(blurValue: blurValue, size: size)
             ],
           ),
         ),

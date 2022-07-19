@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
 
 import 'friflex_i_painter.dart';
 
@@ -11,8 +12,6 @@ class FriflexTextLogo extends StatelessWidget {
     required Animation iRectHeight,
     required Animation iDotRotation,
     required Animation iDotOpacity,
-    required this.textColor,
-    required this.rectColor,
   })  : _iDotYPosition = iDotYPosition,
         _iRectHeight = iRectHeight,
         _iDotRotation = iDotRotation,
@@ -24,8 +23,6 @@ class FriflexTextLogo extends StatelessWidget {
   final Animation _iRectHeight;
   final Animation _iDotRotation;
   final Animation _iDotOpacity;
-  final Color textColor;
-  final Color rectColor;
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +41,6 @@ class FriflexTextLogo extends StatelessWidget {
                 iRectHeight: _iRectHeight.value,
                 iDotRotation: _iDotRotation.value,
                 iDotOpacity: _iDotOpacity.value,
-                iRectColor: textColor,
-                iDotColor: rectColor,
               ),
             ),
           ),
@@ -53,9 +48,9 @@ class FriflexTextLogo extends StatelessWidget {
             width: logoWidth * 490 / 862,
             height: logoWidth * 132 / 862,
             child: SvgPicture.asset(
-              'assets/logo.svg',
+              LogoConst.svgLogoPath,
               fit: BoxFit.fill,
-              color: textColor,
+              color: LogoConst.textColor,
             ),
           ),
         ],

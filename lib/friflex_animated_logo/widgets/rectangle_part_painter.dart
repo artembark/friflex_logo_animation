@@ -27,6 +27,7 @@ class RectanglePartPainter extends CustomPainter {
     canvas.restore();
 
     //not working with html renderer on mobile web browsers
+    //but better as saveLayer not used
     // canvas.drawRRect(
     //     RRect.fromLTRBR(
     //         0, 0, size.width, size.height, Radius.circular(borderRadius)),

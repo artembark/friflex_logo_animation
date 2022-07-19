@@ -7,14 +7,10 @@ class FriflexAnimatedText extends StatefulWidget {
     Key? key,
     required this.controller,
     required this.logoWidth,
-    required this.textColor,
-    required this.rectColor,
   }) : super(key: key);
 
   final AnimationController controller;
   final double logoWidth;
-  final Color textColor;
-  final Color rectColor;
 
   @override
   State<FriflexAnimatedText> createState() => _FriflexAnimatedTextState();
@@ -138,8 +134,6 @@ class _FriflexAnimatedTextState extends State<FriflexAnimatedText> {
         iRectHeight: _iRectHeight,
         iDotRotation: _iDotRotation,
         iDotOpacity: _iDotOpacity,
-        textColor: widget.textColor,
-        rectColor: widget.rectColor,
       ),
     );
   }
