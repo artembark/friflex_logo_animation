@@ -32,7 +32,7 @@ class FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
     transformController =
         AnimationController(vsync: this, duration: widget.duration);
     introController =
-        AnimationController(vsync: this, duration: widget.duration * 2);
+        AnimationController(vsync: this, duration: widget.duration);
 
     _step1SquarePositionAnimation = LogoAnimation().intervalTween(
       controller: transformController,

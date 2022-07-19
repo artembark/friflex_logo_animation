@@ -39,7 +39,7 @@ class _SquareBigToSmallState extends State<SquareBigToSmall> {
     _introScaleAnimation = LogoAnimation().intervalTween(
       controller: widget.introController,
       curve: Curves.elasticOut,
-      tweenBegin: 0.0,
+      tweenBegin: 0.5,
       tweenEnd: 1.0,
       intervalBegin: 0.0,
       intervalEnd: 0.5,

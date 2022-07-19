@@ -1,7 +1,7 @@
 abstract class AppConst {
   AppConst._();
 
-  static const int normalDuration = 1500;
+  static const int normalDuration = 1200;
   static const int slowDuration = 5000;
   static const double animationInitialValue = 0.0;
   static const double animationFinalValue = 1.0;
