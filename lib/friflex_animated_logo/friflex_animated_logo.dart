@@ -95,7 +95,7 @@ class FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
                       logoWidth: logoWidth,
                     ),
                   ),
-                  //появление и трансформация ромба в F
+                  //появление, смещение и трансформация ромба в F
                   Positioned(
                     left: _step1SquarePositionAnimation.value *
                         (logoWidth / 2.0 - logoHeight / 2.0),
