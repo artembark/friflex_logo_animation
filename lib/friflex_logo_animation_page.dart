@@ -128,11 +128,11 @@ class _FriflexLogoAnimationPageState extends State<FriflexLogoAnimationPage> {
                 setDurationReset(duration: 6000);
                 break;
               case 3:
+                if (!sliderVisible) {
+                  logoKey.currentState?.transformController.reset();
+                  logoKey.currentState?.introController.reset();
+                }
                 setState(() {
-                  if (!sliderVisible) {
-                    logoKey.currentState?.transformController.reset();
-                    logoKey.currentState?.introController.reset();
-                  }
                   sliderValue = 0;
                   sliderVisible = !sliderVisible;
                 });
