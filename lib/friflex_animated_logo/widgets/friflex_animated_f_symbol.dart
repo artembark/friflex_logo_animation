@@ -100,6 +100,7 @@ class _FriflexAnimatedFSymbolState extends State<FriflexAnimatedFSymbol> {
                 borderRadius: widget.rectBorderRadius,
                 blurValue: _step4BlurAnimation.value,
               ),
+            //центральный
             if (_step4PositionAnimation.value > 0)
               RectanglePart(
                 size: widget.smallSquareSide,
@@ -132,7 +133,7 @@ class _FriflexAnimatedFSymbolState extends State<FriflexAnimatedFSymbol> {
                 borderRadius: widget.rectBorderRadius,
                 blurValue: _step3BlurAnimation.value,
               ),
-            //большой переходящий в левый центральный
+            //большой, переходящий в левый центральный
             BigToSmallRectangle(
               introController: widget.introController,
               transformController: widget.transformController,

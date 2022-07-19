@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
 
-class BlurOverlay extends StatelessWidget {
-  const BlurOverlay({
+class RectangleBlurOverlay extends StatelessWidget {
+  const RectangleBlurOverlay({
     Key? key,
     required this.blurValue,
     required this.size,

@@ -2,13 +2,19 @@ abstract class AppConst {
   AppConst._();
 
   static const int normalDuration = 1500;
-  static const int slowDuration = 6000;
-  static const double sliderInitValue = 0.0;
+  static const int slowDuration = 5000;
+  static const double animationInitialValue = 0.0;
+  static const double animationFinalValue = 1.0;
   static const String sourceLink =
       'https://github.com/artembark/friflex_logo_animation';
+  static const String settingsButtonText = "Настройки";
   static const String sourceButtonText = "Исходный код";
+  static const int pmSourceButtonIndex = 0;
   static const String normalSpeedButtonText = "Нормальная скорость";
+  static const int pmNormalSpeedButtonIndex = 1;
   static const String slowSpeedButtonText = "Замедленная скорость";
+  static const int pmSlowSpeedButtonIndex = 2;
   static const String hideSliderButtonText = "Скрыть слайдер";
   static const String showSliderButtonText = "Показать слайдер";
+  static const int pmSliderVisibilityButtonIndex = 3;
 }

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/animations/logo_animation.dart';
-import 'package:friflex_logo_animation/friflex_animated_logo/widgets/blur_overlay.dart';
+import 'package:friflex_logo_animation/friflex_animated_logo/widgets/rectangle_blur_overlay.dart';
 
 import 'rectangle_glow.dart';
 
@@ -91,12 +91,12 @@ class _BigToSmallRectangleState extends State<BigToSmallRectangle> {
                 ),
               ),
               if (_step1BlurAnimation.value > LogoConst.blurThreshold)
-                BlurOverlay(
+                RectangleBlurOverlay(
                   blurValue: _step1BlurAnimation.value,
                   size: widget.smallSquareSide,
                 ),
               if (_step2BlurAnimation.value > LogoConst.blurThreshold)
-                BlurOverlay(
+                RectangleBlurOverlay(
                   blurValue: _step2BlurAnimation.value,
                   size: widget.smallSquareSide,
                 ),

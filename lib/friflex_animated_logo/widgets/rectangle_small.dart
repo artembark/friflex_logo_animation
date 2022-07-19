@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
-import 'package:friflex_logo_animation/friflex_animated_logo/widgets/blur_overlay.dart';
+import 'package:friflex_logo_animation/friflex_animated_logo/widgets/rectangle_blur_overlay.dart';
 
 class RectangleSmall extends StatelessWidget {
   const RectangleSmall({
@@ -36,7 +36,7 @@ class RectangleSmall extends StatelessWidget {
                     borderRadius: BorderRadius.circular(borderRadius),
                     color: LogoConst.rectColor),
               ),
-              if (isBlur) BlurOverlay(blurValue: blurValue, size: size)
+              if (isBlur) RectangleBlurOverlay(blurValue: blurValue, size: size)
             ],
           ),
         ),

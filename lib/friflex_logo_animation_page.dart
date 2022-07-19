@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:friflex_logo_animation/app/app_const.dart';
+import 'package:friflex_logo_animation/app/app_theme.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/friflex_animated_logo.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -17,7 +18,7 @@ class _FriflexLogoAnimationPageState extends State<FriflexLogoAnimationPage> {
 
   final Uri _url = Uri.parse(AppConst.sourceLink);
   int duration = AppConst.normalDuration;
-  double sliderValue = AppConst.sliderInitValue;
+  double sliderValue = AppConst.animationInitialValue;
   bool sliderVisible = false;
 
   @override
@@ -26,20 +27,14 @@ class _FriflexLogoAnimationPageState extends State<FriflexLogoAnimationPage> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: sliderVisible ? buildAnimationSlider() : null,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        backgroundColor: AppTheme.appBarBackgroundColor,
+        elevation: AppTheme.appBarElevation,
         actions: [
           buildActions(),
         ],
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: RadialGradient(
-            radius: 0.7,
-            center: Alignment.topLeft,
-            colors: [Color(0xFFEBDAFF), Colors.white],
-          ),
-        ),
+        decoration: AppTheme.backgroundGradient,
         child: Center(
           child: FriflexAnimatedLogo(
             key: logoKey,
@@ -52,16 +47,19 @@ class _FriflexLogoAnimationPageState extends State<FriflexLogoAnimationPage> {
 
   Slider buildAnimationSlider() {
     return Slider(
-      min: 0,
-      max: 2,
+      min: AppConst.animationInitialValue,
+      max: AppConst.animationFinalValue * 2,
       onChanged: (value) {
-        if (value <= 1) {
+        if (value <= AppConst.animationFinalValue) {
           logoKey.currentState?.introController.value = value;
-          logoKey.currentState?.transformController.value = 0.0;
+          logoKey.currentState?.transformController.value =
+              AppConst.animationInitialValue;
         }
-        if (value >= 1) {
-          logoKey.currentState?.introController.value = 1.0;
-          logoKey.currentState?.transformController.value = value - 1.0;
+        if (value >= AppConst.animationFinalValue) {
+          logoKey.currentState?.introController.value =
+              AppConst.animationFinalValue;
+          logoKey.currentState?.transformController.value =
+              value - AppConst.animationFinalValue;
         }
         setState(() {
           sliderValue = value;
@@ -79,74 +77,87 @@ class _FriflexLogoAnimationPageState extends State<FriflexLogoAnimationPage> {
 
   Padding buildActions() {
     return Padding(
-      padding: const EdgeInsets.only(right: 16.0),
-      child: PopupMenuButton(
-          icon: const Icon(
-            Icons.menu,
-            color: Colors.black,
-          ),
-          itemBuilder: (context) {
-            return [
-              const PopupMenuItem<int>(
-                value: 0,
-                child: Text(AppConst.sourceButtonText),
-              ),
-              const PopupMenuItem<int>(
-                value: 1,
-                child: Text(AppConst.normalSpeedButtonText),
-              ),
-              const PopupMenuItem<int>(
-                value: 2,
-                child: Text(AppConst.slowSpeedButtonText),
-              ),
-              PopupMenuItem<int>(
-                value: 3,
-                child: sliderVisible
-                    ? const Text(AppConst.hideSliderButtonText)
-                    : const Text(AppConst.showSliderButtonText),
-              ),
-            ];
-          },
-          onSelected: (value) {
-            switch (value) {
-              case 0:
-                _launchUrl(_url);
-                break;
-              case 1:
-                setState(() {
-                  sliderVisible = false;
-                  sliderValue = AppConst.sliderInitValue;
-                });
-                setDurationReset(duration: AppConst.normalDuration);
-                break;
-              case 2:
-                setState(() {
-                  sliderVisible = false;
-                  sliderValue = AppConst.sliderInitValue;
-                });
-                setDurationReset(duration: AppConst.slowDuration);
-                break;
-              case 3:
-                if (!sliderVisible) {
-                  logoKey.currentState?.transformController.reset();
-                  logoKey.currentState?.introController.reset();
-                }
-                setState(() {
-                  sliderValue = AppConst.sliderInitValue;
-                  sliderVisible = !sliderVisible;
-                });
-                break;
-            }
-          }),
+      padding: AppTheme.popupMenuButtonPadding,
+      child: TooltipVisibility(
+        visible: false,
+        child: PopupMenuButton(
+            child: Row(
+              children: const [
+                Icon(
+                  Icons.menu,
+                  color: AppTheme.textColor,
+                ),
+                Text(
+                  AppConst.settingsButtonText,
+                  style: TextStyle(
+                    color: AppTheme.textColor,
+                  ),
+                ),
+              ],
+            ),
+            itemBuilder: (context) {
+              return [
+                const PopupMenuItem<int>(
+                  value: AppConst.pmSourceButtonIndex,
+                  child: Text(AppConst.sourceButtonText),
+                ),
+                const PopupMenuItem<int>(
+                  value: AppConst.pmNormalSpeedButtonIndex,
+                  child: Text(AppConst.normalSpeedButtonText),
+                ),
+                const PopupMenuItem<int>(
+                  value: AppConst.pmSlowSpeedButtonIndex,
+                  child: Text(AppConst.slowSpeedButtonText),
+                ),
+                PopupMenuItem<int>(
+                  value: AppConst.pmSliderVisibilityButtonIndex,
+                  child: sliderVisible
+                      ? const Text(AppConst.hideSliderButtonText)
+                      : const Text(AppConst.showSliderButtonText),
+                ),
+              ];
+            },
+            onSelected: (value) {
+              switch (value) {
+                case AppConst.pmSourceButtonIndex:
+                  _launchUrl(_url);
+                  break;
+                case AppConst.pmNormalSpeedButtonIndex:
+                  setDurationReset(duration: AppConst.normalDuration);
+                  break;
+                case AppConst.pmSlowSpeedButtonIndex:
+                  setDurationReset(duration: AppConst.slowDuration);
+                  break;
+                case AppConst.pmSliderVisibilityButtonIndex:
+                  if (sliderVisible) {
+                    setDurationReset(duration: AppConst.normalDuration);
+                  } else {
+                    setState(() {
+                      sliderVisible = true;
+                      sliderValue = AppConst.animationFinalValue;
+                    });
+                    logoKey.currentState?.introController.value =
+                        AppConst.animationFinalValue;
+                    logoKey.currentState?.transformController.value =
+                        AppConst.animationInitialValue;
+                  }
+                  break;
+              }
+            }),
+      ),
     );
   }
 
   void setDurationReset({required int duration}) {
+    setState(() {
+      sliderVisible = false;
+    });
     logoKey.currentState?.transformController.duration =
         Duration(milliseconds: duration);
     logoKey.currentState?.introController.duration =
         Duration(milliseconds: duration * 2);
     logoKey.currentState?.transformController.reset();
-    logoKey.currentState?.introController.forward(from: 0.0);
+    logoKey.currentState?.introController
+        .forward(from: AppConst.animationInitialValue);
   }
 }
