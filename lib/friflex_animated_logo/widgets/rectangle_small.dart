@@ -22,7 +22,7 @@ class RectangleSmall extends StatelessWidget {
     return Transform.translate(
       offset: offset,
       child: Transform.rotate(
-        angle: LogoConst.rotation,
+        angle: LogoConst.rectRotation,
         child: SizedBox(
           height: size * LogoConst.blurOversize,
           width: size * LogoConst.blurOversize,

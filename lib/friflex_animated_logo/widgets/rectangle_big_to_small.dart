@@ -67,7 +67,7 @@ class _BigToSmallRectangleState extends State<BigToSmallRectangle> {
     return Transform.scale(
       scale: _step2ScaleAnimation.value,
       child: Transform.rotate(
-        angle: pi / 4 + _introRotationAnimation.value,
+        angle: LogoConst.rectRotation + _introRotationAnimation.value,
         child: SizedBox(
           height: widget.smallSquareSide * LogoConst.blurOversize,
           width: widget.smallSquareSide * LogoConst.blurOversize,
