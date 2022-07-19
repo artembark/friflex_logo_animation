@@ -4,7 +4,7 @@ class LogoAnimation {
   static const startBlur = 0.0;
   static const finalBlur = 0.15;
 
-  Animation rectBlurAnimation({
+  Animation squareBlurAnimation({
     required AnimationController controller,
     required double begin,
     required double end,
@@ -31,7 +31,7 @@ class LogoAnimation {
     );
   }
 
-  Animation smallRectPositionAnimation(
+  Animation smallSquarePositionAnimation(
       {required AnimationController controller,
       required double begin,
       required double end}) {

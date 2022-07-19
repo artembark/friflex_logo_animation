@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/animations/logo_animation.dart';
 
-import 'rectangle_big_to_small.dart';
-import 'rectangle_part.dart';
-import 'rectangle_small.dart';
+import 'square_big_to_small.dart';
+import 'square_part.dart';
+import 'square_small.dart';
 
 class FriflexAnimatedFSymbol extends StatefulWidget {
   const FriflexAnimatedFSymbol({
@@ -14,7 +14,7 @@ class FriflexAnimatedFSymbol extends StatefulWidget {
     required this.horizontalDiagonalOffset,
     required this.halfBigSquareSide,
     required this.smallSquareSide,
-    required this.rectBorderRadius,
+    required this.squareBorderRadius,
   }) : super(key: key);
 
   final AnimationController introController;
@@ -24,7 +24,7 @@ class FriflexAnimatedFSymbol extends StatefulWidget {
   final double horizontalDiagonalOffset;
   final double halfBigSquareSide;
   final double smallSquareSide;
-  final double rectBorderRadius;
+  final double squareBorderRadius;
 
   @override
   State<FriflexAnimatedFSymbol> createState() => _FriflexAnimatedFSymbolState();
@@ -53,17 +53,17 @@ class _FriflexAnimatedFSymbolState extends State<FriflexAnimatedFSymbol> {
       ),
     );
 
-    _step3PositionAnimation = LogoAnimation().smallRectPositionAnimation(
+    _step3PositionAnimation = LogoAnimation().smallSquarePositionAnimation(
         controller: widget.transformController, begin: 0.4, end: 0.6);
-    _step3BlurAnimation = LogoAnimation().rectBlurAnimation(
+    _step3BlurAnimation = LogoAnimation().squareBlurAnimation(
         controller: widget.transformController, begin: 0.4, end: 0.6);
-    _step4PositionAnimation = LogoAnimation().smallRectPositionAnimation(
+    _step4PositionAnimation = LogoAnimation().smallSquarePositionAnimation(
         controller: widget.transformController, begin: 0.6, end: 0.8);
-    _step4BlurAnimation = LogoAnimation().rectBlurAnimation(
+    _step4BlurAnimation = LogoAnimation().squareBlurAnimation(
         controller: widget.transformController, begin: 0.6, end: 0.8);
-    _step5PositionAnimation = LogoAnimation().smallRectPositionAnimation(
+    _step5PositionAnimation = LogoAnimation().smallSquarePositionAnimation(
         controller: widget.transformController, begin: 0.8, end: 1.0);
-    _step5BlurAnimation = LogoAnimation().rectBlurAnimation(
+    _step5BlurAnimation = LogoAnimation().squareBlurAnimation(
         controller: widget.transformController, begin: 0.8, end: 1.0);
   }
 
@@ -79,66 +79,66 @@ class _FriflexAnimatedFSymbolState extends State<FriflexAnimatedFSymbol> {
           children: [
             //правый верхний
             if (_step5PositionAnimation.value > 0)
-              RectanglePart(
+              SquarePart(
                 size: widget.smallSquareSide,
                 offset: Offset(
                     widget.horizontalDiagonalOffset *
                         (_step4PositionAnimation.value +
                             _step5PositionAnimation.value),
                     -widget.halfBigSquareSide * _step3PositionAnimation.value),
-                borderRadius: widget.rectBorderRadius,
+                borderRadius: widget.squareBorderRadius,
                 blurValue: _step5BlurAnimation.value,
               ),
             //центральный верхний
             if (_step4PositionAnimation.value > 0)
-              RectanglePart(
+              SquarePart(
                 size: widget.smallSquareSide,
                 offset: Offset(
                     widget.horizontalDiagonalOffset *
                         _step4PositionAnimation.value,
                     -widget.halfBigSquareSide * _step3PositionAnimation.value),
-                borderRadius: widget.rectBorderRadius,
+                borderRadius: widget.squareBorderRadius,
                 blurValue: _step4BlurAnimation.value,
               ),
             //центральный
             if (_step4PositionAnimation.value > 0)
-              RectanglePart(
+              SquarePart(
                 size: widget.smallSquareSide,
                 offset: Offset(
                     widget.horizontalDiagonalOffset *
                         _step4PositionAnimation.value,
                     0),
-                borderRadius: widget.rectBorderRadius,
+                borderRadius: widget.squareBorderRadius,
                 blurValue: _step4BlurAnimation.value,
               ),
             //левый верхний
             if (_step3PositionAnimation.value > 0)
-              RectangleSmall(
+              SquareSmall(
                 size: widget.smallSquareSide,
                 offset: Offset(
                   0,
                   -widget.halfBigSquareSide * _step3PositionAnimation.value,
                 ),
-                borderRadius: widget.rectBorderRadius,
+                borderRadius: widget.squareBorderRadius,
                 blurValue: _step3BlurAnimation.value,
               ),
             //левый нижний
             if (_step3PositionAnimation.value > 0)
-              RectangleSmall(
+              SquareSmall(
                 size: widget.smallSquareSide,
                 offset: Offset(
                   0,
                   widget.halfBigSquareSide * _step3PositionAnimation.value,
                 ),
-                borderRadius: widget.rectBorderRadius,
+                borderRadius: widget.squareBorderRadius,
                 blurValue: _step3BlurAnimation.value,
               ),
             //большой, переходящий в левый центральный
-            BigToSmallRectangle(
+            SquareBigToSmall(
               introController: widget.introController,
               transformController: widget.transformController,
               smallSquareSide: widget.smallSquareSide,
-              rectBorderRadius: widget.rectBorderRadius,
+              squareBorderRadius: widget.squareBorderRadius,
             ),
           ],
         ),

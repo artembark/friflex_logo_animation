@@ -1,25 +1,32 @@
 import 'package:flutter/material.dart';
 
-class RectangleGlow extends StatefulWidget {
-  const RectangleGlow({
+class SquareGlow extends StatefulWidget {
+  ///Виджет, создающий затухающую цветную волну от квадратного контейнера.
+  ///Для использования необходим управляющий контроллер [controller],
+  ///контейнер вокгруг которого будет анимироваться волна [child],
+  ///цвет волны [color], начальный размер [size],
+  ///степень увеличения [scaleFactor], радиус углов [borderRadius]
+  const SquareGlow({
     Key? key,
-    required this.introController,
+    required this.controller,
     required this.child,
     required this.color,
     required this.size,
     required this.borderRadius,
+    required this.scaleFactor,
   }) : super(key: key);
-  final AnimationController introController;
+  final AnimationController controller;
   final Widget child;
   final Color color;
   final double size;
   final double borderRadius;
+  final double scaleFactor;
 
   @override
-  State<RectangleGlow> createState() => _RectangleGlowState();
+  State<SquareGlow> createState() => _SquareGlowState();
 }
 
-class _RectangleGlowState extends State<RectangleGlow> {
+class _SquareGlowState extends State<SquareGlow> {
   late Animation _introGlowSizeAnimation;
   late Animation _introGlowOpacityAnimation;
 
@@ -31,7 +38,7 @@ class _RectangleGlowState extends State<RectangleGlow> {
         .chain(CurveTween(curve: Curves.ease))
         .animate(
           CurvedAnimation(
-            parent: widget.introController,
+            parent: widget.controller,
             curve: const Interval(
               0.5,
               1.0,
@@ -39,11 +46,11 @@ class _RectangleGlowState extends State<RectangleGlow> {
           ),
         );
 
-    _introGlowSizeAnimation = Tween<double>(begin: 1.0, end: 1.8)
+    _introGlowSizeAnimation = Tween<double>(begin: 1.0, end: widget.scaleFactor)
         .chain(CurveTween(curve: Curves.ease))
         .animate(
           CurvedAnimation(
-            parent: widget.introController,
+            parent: widget.controller,
             curve: const Interval(
               0.5,
               1.0,
@@ -55,7 +62,7 @@ class _RectangleGlowState extends State<RectangleGlow> {
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: widget.introController,
+      animation: widget.controller,
       child: widget.child,
       builder: (context, child) {
         return Stack(

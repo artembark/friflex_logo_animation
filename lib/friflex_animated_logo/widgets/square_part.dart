@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
-import 'package:friflex_logo_animation/friflex_animated_logo/widgets/rectangle_blur_overlay.dart';
+import 'package:friflex_logo_animation/friflex_animated_logo/widgets/square_blur_overlay.dart';
 
-import 'rectangle_part_painter.dart';
+import 'square_part_painter.dart';
 
-class RectanglePart extends StatelessWidget {
-  const RectanglePart({
+class SquarePart extends StatelessWidget {
+  ///Квадрат с квадратным вырезом с одного из углов
+  ///Для рисования необходим размер стороны [size],
+  ///радиус угла [borderRadius], цвет заливки [color],
+  ///смещение [offset]
+  const SquarePart({
     Key? key,
     required this.size,
     required this.blurValue,
@@ -24,7 +28,7 @@ class RectanglePart extends StatelessWidget {
     return Transform.translate(
       offset: offset,
       child: Transform.rotate(
-        angle: LogoConst.rectRotation,
+        angle: LogoConst.squareRotation,
         child: SizedBox(
           height: size * LogoConst.blurOversize,
           width: size * LogoConst.blurOversize,
@@ -35,11 +39,11 @@ class RectanglePart extends StatelessWidget {
                 height: size,
                 width: size,
                 child: CustomPaint(
-                  painter: RectanglePartPainter(
-                      borderRadius: borderRadius, color: LogoConst.rectColor),
+                  painter: SquarePartPainter(
+                      borderRadius: borderRadius, color: LogoConst.squareColor),
                 ),
               ),
-              if (isBlur) RectangleBlurOverlay(blurValue: blurValue, size: size)
+              if (isBlur) SquareBlurOverlay(blurValue: blurValue, size: size)
             ],
           ),
         ),

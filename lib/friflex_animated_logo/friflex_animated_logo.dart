@@ -19,7 +19,7 @@ class FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
     with TickerProviderStateMixin {
   late AnimationController transformController;
   late AnimationController introController;
-  late Animation _step1RectPositionAnimation;
+  late Animation _step1SquarePositionAnimation;
 
   @override
   void initState() {
@@ -29,7 +29,7 @@ class FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
     introController =
         AnimationController(vsync: this, duration: widget.duration * 2);
 
-    _step1RectPositionAnimation =
+    _step1SquarePositionAnimation =
         Tween<double>(begin: 1.0, end: 62 / 862).animate(
       CurvedAnimation(
         parent: transformController,
@@ -95,13 +95,13 @@ class FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
                   ),
                   //появление и трансформация ромба
                   Positioned(
-                    left: _step1RectPositionAnimation.value *
+                    left: _step1SquarePositionAnimation.value *
                         (logoWidth / 2.0 - logoHeight / 2.0),
                     bottom: 0,
                     child: FriflexAnimatedFSymbol(
                       introController: introController,
                       transformController: transformController,
-                      rectBorderRadius: borderRadius,
+                      squareBorderRadius: borderRadius,
                       bigSquareDiagonal: bigSquareDiagonal,
                       horizontalDiagonalOffset: horizontalDiagonalOffset,
                       halfBigSquareSide: halfBigSquareSide,

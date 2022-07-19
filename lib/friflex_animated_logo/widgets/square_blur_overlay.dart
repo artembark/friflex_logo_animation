@@ -3,8 +3,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
 
-class RectangleBlurOverlay extends StatelessWidget {
-  const RectangleBlurOverlay({
+class SquareBlurOverlay extends StatelessWidget {
+  ///Виджет создает квадратное размытие размером [size]
+  ///и величиной размытия [blurValue].
+  ///Для работе в Flutter Web требует исключения из дерева
+  ///виджетов при blurValue=0
+  const SquareBlurOverlay({
     Key? key,
     required this.blurValue,
     required this.size,

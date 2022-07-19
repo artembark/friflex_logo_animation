@@ -3,29 +3,29 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/animations/logo_animation.dart';
-import 'package:friflex_logo_animation/friflex_animated_logo/widgets/rectangle_blur_overlay.dart';
+import 'package:friflex_logo_animation/friflex_animated_logo/widgets/square_blur_overlay.dart';
 
-import 'rectangle_glow.dart';
+import 'square_glow.dart';
 
-class BigToSmallRectangle extends StatefulWidget {
-  const BigToSmallRectangle({
+class SquareBigToSmall extends StatefulWidget {
+  const SquareBigToSmall({
     Key? key,
     required this.introController,
     required this.transformController,
     required this.smallSquareSide,
-    required this.rectBorderRadius,
+    required this.squareBorderRadius,
   }) : super(key: key);
 
   final AnimationController introController;
   final AnimationController transformController;
   final double smallSquareSide;
-  final double rectBorderRadius;
+  final double squareBorderRadius;
 
   @override
-  State<BigToSmallRectangle> createState() => _BigToSmallRectangleState();
+  State<SquareBigToSmall> createState() => _SquareBigToSmallState();
 }
 
-class _BigToSmallRectangleState extends State<BigToSmallRectangle> {
+class _SquareBigToSmallState extends State<SquareBigToSmall> {
   late Animation _introRotationAnimation;
   late Animation _step1BlurAnimation;
   late Animation _step2BlurAnimation;
@@ -45,7 +45,7 @@ class _BigToSmallRectangleState extends State<BigToSmallRectangle> {
             ),
           ),
         );
-    _step1BlurAnimation = LogoAnimation().rectBlurAnimation(
+    _step1BlurAnimation = LogoAnimation().squareBlurAnimation(
         controller: widget.transformController, begin: 0.0, end: 0.2);
     _step2ScaleAnimation =
         Tween<double>(begin: LogoConst.smallSquareScale, end: 1.0).animate(
@@ -58,7 +58,7 @@ class _BigToSmallRectangleState extends State<BigToSmallRectangle> {
         ),
       ),
     );
-    _step2BlurAnimation = LogoAnimation().rectBlurAnimation(
+    _step2BlurAnimation = LogoAnimation().squareBlurAnimation(
         controller: widget.transformController, begin: 0.2, end: 0.4);
   }
 
@@ -67,36 +67,37 @@ class _BigToSmallRectangleState extends State<BigToSmallRectangle> {
     return Transform.scale(
       scale: _step2ScaleAnimation.value,
       child: Transform.rotate(
-        angle: LogoConst.rectRotation + _introRotationAnimation.value,
+        angle: LogoConst.squareRotation + _introRotationAnimation.value,
         child: SizedBox(
           height: widget.smallSquareSide * LogoConst.blurOversize,
           width: widget.smallSquareSide * LogoConst.blurOversize,
           child: Stack(
             alignment: Alignment.center,
             children: [
-              RectangleGlow(
-                introController: widget.introController,
-                color: LogoConst.rectColor,
+              SquareGlow(
+                controller: widget.introController,
+                color: LogoConst.squareColor,
                 size: widget.smallSquareSide,
-                borderRadius: widget.rectBorderRadius,
+                scaleFactor: 1.8,
+                borderRadius: widget.squareBorderRadius,
                 child: Container(
                   height: widget.smallSquareSide,
                   width: widget.smallSquareSide,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(
-                      widget.rectBorderRadius,
+                      widget.squareBorderRadius,
                     ),
-                    color: LogoConst.rectColor,
+                    color: LogoConst.squareColor,
                   ),
                 ),
               ),
               if (_step1BlurAnimation.value > LogoConst.blurThreshold)
-                RectangleBlurOverlay(
+                SquareBlurOverlay(
                   blurValue: _step1BlurAnimation.value,
                   size: widget.smallSquareSide,
                 ),
               if (_step2BlurAnimation.value > LogoConst.blurThreshold)
-                RectangleBlurOverlay(
+                SquareBlurOverlay(
                   blurValue: _step2BlurAnimation.value,
                   size: widget.smallSquareSide,
                 ),

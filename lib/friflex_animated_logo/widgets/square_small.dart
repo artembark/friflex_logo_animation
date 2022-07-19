@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
-import 'package:friflex_logo_animation/friflex_animated_logo/widgets/rectangle_blur_overlay.dart';
+import 'package:friflex_logo_animation/friflex_animated_logo/widgets/square_blur_overlay.dart';
 
-class RectangleSmall extends StatelessWidget {
-  const RectangleSmall({
+class SquareSmall extends StatelessWidget {
+  ///Залитый цветом размываемый ромб. Для создания требует
+  ///размер сторон [size], радиус углов [borderRadius],
+  ///размытие [blurValue], смещение [offset]
+  const SquareSmall({
     Key? key,
     required this.blurValue,
     required this.size,
@@ -22,7 +25,7 @@ class RectangleSmall extends StatelessWidget {
     return Transform.translate(
       offset: offset,
       child: Transform.rotate(
-        angle: LogoConst.rectRotation,
+        angle: LogoConst.squareRotation,
         child: SizedBox(
           height: size * LogoConst.blurOversize,
           width: size * LogoConst.blurOversize,
@@ -34,9 +37,9 @@ class RectangleSmall extends StatelessWidget {
                 width: size,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(borderRadius),
-                    color: LogoConst.rectColor),
+                    color: LogoConst.squareColor),
               ),
-              if (isBlur) RectangleBlurOverlay(blurValue: blurValue, size: size)
+              if (isBlur) SquareBlurOverlay(blurValue: blurValue, size: size)
             ],
           ),
         ),
