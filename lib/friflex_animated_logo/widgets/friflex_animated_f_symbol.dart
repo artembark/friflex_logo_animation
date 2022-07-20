@@ -3,7 +3,7 @@ import 'package:friflex_logo_animation/friflex_animated_logo/animations/logo_ani
 
 import 'square_big_to_small.dart';
 import 'square_part.dart';
-import 'square_small.dart';
+import 'square.dart';
 
 class FriflexAnimatedFSymbol extends StatefulWidget {
   ///Виджет анимации появления большого ромба и трансформации
@@ -120,7 +120,7 @@ class _FriflexAnimatedFSymbolState extends State<FriflexAnimatedFSymbol> {
             ),
           //левый верхний
           if (_step3PositionAnimation.value > 0)
-            SquareSmall(
+            Square(
               size: widget.smallSquareSide,
               offset: Offset(
                 0,
@@ -131,7 +131,7 @@ class _FriflexAnimatedFSymbolState extends State<FriflexAnimatedFSymbol> {
             ),
           //левый нижний
           if (_step3PositionAnimation.value > 0)
-            SquareSmall(
+            Square(
               size: widget.smallSquareSide,
               offset: Offset(
                 0,

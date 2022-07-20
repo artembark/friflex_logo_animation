@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class LogoAnimation {
   static const startBlur = 0.0;
-  static const finalBlur = 0.15;
+  static const finalBlur = 0.25;
 
   Animation squareBlurAnimation({
     required AnimationController controller,

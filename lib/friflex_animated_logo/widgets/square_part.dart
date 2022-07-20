@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
-import 'package:friflex_logo_animation/friflex_animated_logo/widgets/square_blur_overlay.dart';
 
 import 'square_part_painter.dart';
 
@@ -24,28 +23,14 @@ class SquarePart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isBlur = blurValue > LogoConst.blurThreshold;
     return Transform.translate(
       offset: offset,
-      child: Transform.rotate(
-        angle: LogoConst.squareRotation,
-        child: SizedBox(
-          height: size * LogoConst.blurOversize,
-          width: size * LogoConst.blurOversize,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              SizedBox(
-                height: size,
-                width: size,
-                child: CustomPaint(
-                  painter: SquarePartPainter(
-                      borderRadius: borderRadius, color: LogoConst.squareColor),
-                ),
-              ),
-              if (isBlur) SquareBlurOverlay(blurValue: blurValue, size: size)
-            ],
-          ),
+      child: SizedBox(
+        height: size,
+        width: size,
+        child: CustomPaint(
+          painter: SquarePartPainter(
+              borderRadius: borderRadius, blurValue: blurValue),
         ),
       ),
     );

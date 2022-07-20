@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/animations/logo_animation.dart';
+import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
 
 class SquareGlow extends StatefulWidget {
   ///Виджет, создающий затухающую цветную волну от квадратного контейнера.
@@ -61,17 +64,20 @@ class _SquareGlowState extends State<SquareGlow> {
       builder: (context, child) {
         return Stack(
           children: [
-            Transform.scale(
-              scale: _introGlowSizeAnimation.value,
-              child: Container(
-                height: widget.size,
-                width: widget.size,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    widget.borderRadius,
-                  ),
-                  color: widget.color.withOpacity(
-                    _introGlowOpacityAnimation.value,
+            Transform.rotate(
+              angle: 45 * pi / 180,
+              child: Transform.scale(
+                scale: _introGlowSizeAnimation.value,
+                child: Container(
+                  height: widget.size,
+                  width: widget.size,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      widget.borderRadius,
+                    ),
+                    color: widget.color.withOpacity(
+                      _introGlowOpacityAnimation.value,
+                    ),
                   ),
                 ),
               ),
