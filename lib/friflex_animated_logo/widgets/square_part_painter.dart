@@ -43,13 +43,11 @@ class SquarePartPainter extends CustomPainter {
     // с учетом blendMode
     canvas.restore();
 
-    //not working with html renderer on mobile web browsers
-    //but better as saveLayer not used
+    //не работает с html рендерером в мобильных браузерах
     // canvas.drawRRect(
     //     RRect.fromLTRBR(
     //         0, 0, size.width, size.height, Radius.circular(borderRadius)),
     //     paint);
-
     // canvas.drawPath(
     //   Path.combine(
     //     PathOperation.difference,

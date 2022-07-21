@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
 
 import 'square_part_painter.dart';
 
@@ -25,9 +24,8 @@ class SquarePart extends StatelessWidget {
   Widget build(BuildContext context) {
     return Transform.translate(
       offset: offset,
-      child: SizedBox(
-        height: size,
-        width: size,
+      child: SizedBox.square(
+        dimension: size,
         child: CustomPaint(
           painter: SquarePartPainter(
               borderRadius: borderRadius, blurValue: blurValue),

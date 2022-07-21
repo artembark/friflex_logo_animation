@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:friflex_logo_animation/friflex_animated_logo/widgets/square_painter.dart';
+import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
+import 'package:friflex_logo_animation/friflex_animated_logo/widgets/square_box.dart';
 
 class Square extends StatelessWidget {
   ///Залитый цветом размываемый ромб. Для создания требует
@@ -22,13 +23,11 @@ class Square extends StatelessWidget {
   Widget build(BuildContext context) {
     return Transform.translate(
       offset: offset,
-      child: SizedBox(
-        height: size,
-        width: size,
-        child: CustomPaint(
-          painter:
-              SquarePainter(borderRadius: borderRadius, blurValue: blurValue),
-        ),
+      child: SquareBox(
+        squareSide: size,
+        color: LogoConst.squareColor,
+        borderRadius: borderRadius,
+        blurValue: blurValue,
       ),
     );
   }

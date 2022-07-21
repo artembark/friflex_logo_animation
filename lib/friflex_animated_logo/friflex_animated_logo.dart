@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/animations/logo_animation.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
-import 'package:friflex_logo_animation/friflex_animated_logo/widgets/square_render.dart';
 import 'widgets/friflex_animated_f_symbol.dart';
 import 'widgets/friflex_animated_text.dart';
 

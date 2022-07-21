@@ -1,9 +1,10 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:friflex_logo_animation/friflex_animated_logo/animations/custom_curves.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/animations/logo_animation.dart';
-import 'package:friflex_logo_animation/friflex_animated_logo/widgets/square_painter.dart';
+import 'package:friflex_logo_animation/friflex_animated_logo/widgets/square_box.dart';
 
 import 'square_glow.dart';
 
@@ -46,7 +47,7 @@ class _SquareBigToSmallState extends State<SquareBigToSmall> {
     );
     _introRotationAnimation = LogoAnimation().intervalTween(
       controller: widget.introController,
-      curve: Curves.easeOutBack,
+      curve: const EaseOutBackCustomCurve(),
       tweenBegin: -2.0 * pi,
       tweenEnd: 0,
       intervalBegin: 0.0,
@@ -84,15 +85,11 @@ class _SquareBigToSmallState extends State<SquareBigToSmall> {
           size: widget.smallSquareSide,
           scaleFactor: 1.8,
           borderRadius: widget.squareBorderRadius,
-          child: SizedBox(
-            height: widget.smallSquareSide,
-            width: widget.smallSquareSide,
-            child: CustomPaint(
-              painter: SquarePainter(
-                  borderRadius: widget.squareBorderRadius,
-                  blurValue:
-                      _step1BlurAnimation.value + _step2BlurAnimation.value),
-            ),
+          child: SquareBox(
+            squareSide: widget.smallSquareSide,
+            color: LogoConst.squareColor,
+            borderRadius: widget.squareBorderRadius,
+            blurValue: _step1BlurAnimation.value + _step2BlurAnimation.value,
           ),
         ),
       ),

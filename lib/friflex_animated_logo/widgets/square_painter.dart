@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
 
 class SquarePainter extends CustomPainter {
+  ///Не используется, заменен на отрисовку через RenderObject
+  ///Оставлен для примера
   ///Квадрат с параметром размытия
   ///Для рисования необходим радиус угла [borderRadius]
   ///и цвет заливки [color]
