@@ -19,7 +19,7 @@ class EaseOutBackCustomCurve extends Curve {
 }
 
 ///Похожа на [Curves.elasticOut], но с медленным
-///началом и более крупной пружиной в конце
+///началом и более крупной раскачкой в конце
 class SlowStartMiddleElasticOutCurve extends Curve {
   const SlowStartMiddleElasticOutCurve({
     this.a = 0.15,
