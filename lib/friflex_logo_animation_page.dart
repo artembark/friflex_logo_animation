@@ -16,7 +16,6 @@ class _FriflexLogoAnimationPageState extends State<FriflexLogoAnimationPage> {
   GlobalKey<FriflexAnimatedLogoState> logoKey =
       GlobalKey<FriflexAnimatedLogoState>();
 
-  final Uri _url = Uri.parse(AppConst.sourceLink);
   int duration = AppConst.normalDuration;
   double sliderValue = AppConst.animationInitialValue;
   bool sliderVisible = false;
@@ -125,13 +124,19 @@ class _FriflexLogoAnimationPageState extends State<FriflexLogoAnimationPage> {
                           AppConst.showSliderButtonText,
                         ),
                 ),
+                const PopupMenuItem<int>(
+                  value: AppConst.pmFriflexButtonIndex,
+                  child: Text(
+                    AppConst.friflexButtonText,
+                  ),
+                ),
               ];
             },
             onSelected: (value) {
               switch (value) {
                 case AppConst.pmSourceButtonIndex:
                   _launchUrl(
-                    _url,
+                    Uri.parse(AppConst.sourceLink),
                   );
                   break;
                 case AppConst.pmNormalSpeedButtonIndex:
@@ -159,6 +164,11 @@ class _FriflexLogoAnimationPageState extends State<FriflexLogoAnimationPage> {
                     logoKey.currentState?.transformController.value =
                         AppConst.animationInitialValue;
                   }
+                  break;
+                case AppConst.pmFriflexButtonIndex:
+                  _launchUrl(
+                    Uri.parse(AppConst.friflexLink),
+                  );
                   break;
               }
             }),

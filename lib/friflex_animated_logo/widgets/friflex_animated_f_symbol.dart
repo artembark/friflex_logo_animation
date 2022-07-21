@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/animations/logo_animation.dart';
 
 import 'square_big_to_small.dart';
-import 'square_part.dart';
-import 'square.dart';
+import 'square_part_translated.dart';
+import 'square_translated.dart';
 
 class FriflexAnimatedFSymbol extends StatefulWidget {
   ///Виджет анимации появления большого ромба и трансформации
@@ -85,7 +85,7 @@ class _FriflexAnimatedFSymbolState extends State<FriflexAnimatedFSymbol> {
         children: [
           //правый верхний
           if (_step5PositionAnimation.value > 0)
-            SquarePart(
+            SquarePartTranslated(
               size: widget.smallSquareSide,
               offset: Offset(
                 widget.horizontalDiagonalOffset *
@@ -98,7 +98,7 @@ class _FriflexAnimatedFSymbolState extends State<FriflexAnimatedFSymbol> {
             ),
           //центральный верхний
           if (_step4PositionAnimation.value > 0)
-            SquarePart(
+            SquarePartTranslated(
               size: widget.smallSquareSide,
               offset: Offset(
                 widget.horizontalDiagonalOffset * _step4PositionAnimation.value,
@@ -109,7 +109,7 @@ class _FriflexAnimatedFSymbolState extends State<FriflexAnimatedFSymbol> {
             ),
           //центральный
           if (_step4PositionAnimation.value > 0)
-            SquarePart(
+            SquarePartTranslated(
               size: widget.smallSquareSide,
               offset: Offset(
                   widget.horizontalDiagonalOffset *
@@ -120,7 +120,7 @@ class _FriflexAnimatedFSymbolState extends State<FriflexAnimatedFSymbol> {
             ),
           //левый верхний
           if (_step3PositionAnimation.value > 0)
-            Square(
+            SquareTranslated(
               size: widget.smallSquareSide,
               offset: Offset(
                 0,
@@ -131,7 +131,7 @@ class _FriflexAnimatedFSymbolState extends State<FriflexAnimatedFSymbol> {
             ),
           //левый нижний
           if (_step3PositionAnimation.value > 0)
-            Square(
+            SquareTranslated(
               size: widget.smallSquareSide,
               offset: Offset(
                 0,

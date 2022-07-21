@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/widgets/square_box.dart';
 
-class Square extends StatelessWidget {
+class SquareTranslated extends StatelessWidget {
   ///Залитый цветом размываемый ромб. Для создания требует
   ///размер сторон [size], радиус углов [borderRadius],
   ///размытие [blurValue], смещение [offset]
-  const Square({
+  const SquareTranslated({
     Key? key,
     required this.blurValue,
     required this.size,

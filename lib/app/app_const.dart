@@ -7,6 +7,7 @@ abstract class AppConst {
   static const double animationFinalValue = 1.0;
   static const String sourceLink =
       'https://github.com/artembark/friflex_logo_animation';
+  static const String friflexLink = 'https://friflex.com/';
   static const String settingsButtonText = "Настройки";
   static const String sourceButtonText = "Исходный код";
   static const int pmSourceButtonIndex = 0;
@@ -17,4 +18,6 @@ abstract class AppConst {
   static const String hideSliderButtonText = "Скрыть слайдер";
   static const String showSliderButtonText = "Показать слайдер";
   static const int pmSliderVisibilityButtonIndex = 3;
+  static const String friflexButtonText = "Friflex";
+  static const int pmFriflexButtonIndex = 4;
 }

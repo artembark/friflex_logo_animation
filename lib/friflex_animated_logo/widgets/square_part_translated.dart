@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'square_part_painter.dart';
 
-class SquarePart extends StatelessWidget {
+class SquarePartTranslated extends StatelessWidget {
   ///Квадрат с квадратным вырезом с одного из углов
   ///Для рисования необходим размер стороны [size],
   ///радиус угла [borderRadius], цвет заливки [color],
   ///смещение [offset]
-  const SquarePart({
+  const SquarePartTranslated({
     Key? key,
     required this.size,
     required this.blurValue,

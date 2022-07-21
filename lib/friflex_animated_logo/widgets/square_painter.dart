@@ -19,11 +19,12 @@ class SquarePainter extends CustomPainter {
       ..color = LogoConst.squareColor
       ..maskFilter = MaskFilter.blur(BlurStyle.normal, blurValue);
 
+    //смещение и поворот canvas
     canvas.translate(size.width / 2, size.height / 2);
     canvas.rotate(45 * pi / 180);
     canvas.translate(-size.width / 2, -size.height / 2);
 
-    //рисуем квадрат
+    //рисование квадрата с углами
     canvas.drawRRect(
         RRect.fromLTRBR(
             0, 0, size.width, size.height, Radius.circular(borderRadius)),
