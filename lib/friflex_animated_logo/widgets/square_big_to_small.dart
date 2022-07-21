@@ -47,7 +47,7 @@ class _SquareBigToSmallState extends State<SquareBigToSmall> {
     );
     _introRotationAnimation = LogoAnimation().intervalTween(
       controller: widget.introController,
-      curve: const EaseOutBackCustomCurve(),
+      curve: CustomCurves.easeOutBackCustomCurve,
       tweenBegin: -2.0 * pi,
       tweenEnd: 0,
       intervalBegin: 0.0,

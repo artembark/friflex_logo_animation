@@ -13,7 +13,8 @@
 AnimationController, Animation, Tween, TweenSequence, CurvedAnimation, Interval. Рисование объектов в CustomPaint, создание кастомного RenderObject для отрисовки объекта не через CustomPaint.   
 
 Custom Curves. Моделирование графика кривой через [Desmos.com](https://www.desmos.com/calculator/zmsqfuaitb).
-По ссылке можно увидеть кривую и настроить ее вид ползунками.   
+По ссылке можно увидеть кривую и настроить ее вид ползунками. 
+Для кубических кривых безье получить точки можно [ТУТ](https://cubic-bezier.com/#.22,.88,.47,1.26).   
 <img width="500" alt="curve" src="https://user-images.githubusercontent.com/30658712/180109374-ca04c9e7-169c-415e-b835-3543df1c6642.png">   
 
 

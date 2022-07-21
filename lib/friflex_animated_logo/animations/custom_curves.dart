@@ -2,6 +2,18 @@ import 'dart:math';
 
 import 'package:flutter/animation.dart';
 
+class CustomCurves {
+  // This class is not meant to be instantiated or extended; this constructor
+  // prevents instantiation and extension.
+  CustomCurves._();
+
+  static const Cubic easeOutBackCubicCustomCurve = Cubic(.22, .88, .47, 1.26);
+  static const EaseOutBackCustomCurve easeOutBackCustomCurve =
+      EaseOutBackCustomCurve();
+  static const SlowStartMiddleElasticOutCurve slowStartMiddleElasticOutCurve =
+      SlowStartMiddleElasticOutCurve();
+}
+
 ///Похожа на [Curves.easeOutBack], но имее большее пиковое значение
 class EaseOutBackCustomCurve extends Curve {
   const EaseOutBackCustomCurve({
