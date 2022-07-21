@@ -89,7 +89,8 @@ class _SquareBigToSmallState extends State<SquareBigToSmall> {
             squareSide: widget.smallSquareSide,
             color: LogoConst.squareColor,
             borderRadius: widget.squareBorderRadius,
-            blurValue: _step1BlurAnimation.value + _step2BlurAnimation.value,
+            blurValue: (_step1BlurAnimation.value + _step2BlurAnimation.value) /
+                _step2ScaleAnimation.value,
           ),
         ),
       ),

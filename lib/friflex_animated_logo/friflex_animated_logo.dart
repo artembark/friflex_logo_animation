@@ -81,36 +81,38 @@ class FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
             ],
           ),
           builder: (context, _) {
-            return SizedBox(
-              width: logoWidth,
-              height: logoHeight,
-              child: Stack(
-                children: [
-                  //текст Friflex с нарисованной i
-                  Positioned(
-                    bottom: 0.0,
-                    right: bigSquareSide / 2.0 + bigSquareDiagonalDiff,
-                    child: FriflexAnimatedText(
-                      controller: transformController,
-                      logoWidth: logoWidth,
+            return RepaintBoundary(
+              child: SizedBox(
+                width: logoWidth,
+                height: logoHeight,
+                child: Stack(
+                  children: [
+                    //текст Friflex с нарисованной i
+                    Positioned(
+                      bottom: 0.0,
+                      right: bigSquareSide / 2.0 + bigSquareDiagonalDiff,
+                      child: FriflexAnimatedText(
+                        controller: transformController,
+                        logoWidth: logoWidth,
+                      ),
                     ),
-                  ),
-                  //появление, смещение и трансформация ромба в F
-                  Positioned(
-                    left: _step1SquarePositionAnimation.value *
-                        (logoWidth / 2.0 - logoHeight / 2.0),
-                    bottom: 0,
-                    child: FriflexAnimatedFSymbol(
-                      introController: introController,
-                      transformController: transformController,
-                      squareBorderRadius: borderRadius,
-                      bigSquareDiagonal: bigSquareDiagonal,
-                      horizontalDiagonalOffset: horizontalDiagonalOffset,
-                      halfBigSquareSide: halfBigSquareSide,
-                      smallSquareSide: smallSquareSide,
+                    //появление, смещение и трансформация ромба в F
+                    Positioned(
+                      left: _step1SquarePositionAnimation.value *
+                          (logoWidth / 2.0 - logoHeight / 2.0),
+                      bottom: 0,
+                      child: FriflexAnimatedFSymbol(
+                        introController: introController,
+                        transformController: transformController,
+                        squareBorderRadius: borderRadius,
+                        bigSquareDiagonal: bigSquareDiagonal,
+                        horizontalDiagonalOffset: horizontalDiagonalOffset,
+                        halfBigSquareSide: halfBigSquareSide,
+                        smallSquareSide: smallSquareSide,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           });
