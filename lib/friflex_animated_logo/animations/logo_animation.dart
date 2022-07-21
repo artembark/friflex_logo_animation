@@ -12,13 +12,13 @@ class LogoAnimation {
     return TweenSequence([
       TweenSequenceItem(
           tween: Tween(begin: startBlur, end: finalBlur)
-              .chain(CurveTween(curve: Curves.linear)),
+              .chain(CurveTween(curve: Curves.ease)),
           weight: 0.2),
       TweenSequenceItem<double>(
           tween: ConstantTween<double>(finalBlur), weight: 0.6),
       TweenSequenceItem(
           tween: Tween(begin: finalBlur, end: startBlur)
-              .chain(CurveTween(curve: Curves.linear)),
+              .chain(CurveTween(curve: Curves.ease)),
           weight: 0.2)
     ]).animate(
       CurvedAnimation(

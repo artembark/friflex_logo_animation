@@ -77,78 +77,84 @@ class _FriflexAnimatedFSymbolState extends State<FriflexAnimatedFSymbol> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: widget.bigSquareDiagonal,
-      width: widget.bigSquareDiagonal,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          //правый верхний
-          if (_step5PositionAnimation.value > 0)
-            SquarePartTranslated(
-              size: widget.smallSquareSide,
-              offset: Offset(
-                widget.horizontalDiagonalOffset *
-                    (_step4PositionAnimation.value +
-                        _step5PositionAnimation.value),
-                -widget.halfBigSquareSide * _step3PositionAnimation.value,
-              ),
-              borderRadius: widget.squareBorderRadius,
-              blurValue: _step5BlurAnimation.value,
+    return AnimatedBuilder(
+        animation: Listenable.merge(
+            [widget.introController, widget.transformController]),
+        builder: (context, _) {
+          return SizedBox(
+            height: widget.bigSquareDiagonal,
+            width: widget.bigSquareDiagonal,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                //правый верхний
+                if (_step5PositionAnimation.value > 0)
+                  SquarePartTranslated(
+                    size: widget.smallSquareSide,
+                    offset: Offset(
+                      widget.horizontalDiagonalOffset *
+                          (_step4PositionAnimation.value +
+                              _step5PositionAnimation.value),
+                      -widget.halfBigSquareSide * _step3PositionAnimation.value,
+                    ),
+                    borderRadius: widget.squareBorderRadius,
+                    blurValue: _step5BlurAnimation.value,
+                  ),
+                //центральный верхний
+                if (_step4PositionAnimation.value > 0)
+                  SquarePartTranslated(
+                    size: widget.smallSquareSide,
+                    offset: Offset(
+                      widget.horizontalDiagonalOffset *
+                          _step4PositionAnimation.value,
+                      -widget.halfBigSquareSide * _step3PositionAnimation.value,
+                    ),
+                    borderRadius: widget.squareBorderRadius,
+                    blurValue: _step4BlurAnimation.value,
+                  ),
+                //центральный
+                if (_step4PositionAnimation.value > 0)
+                  SquarePartTranslated(
+                    size: widget.smallSquareSide,
+                    offset: Offset(
+                        widget.horizontalDiagonalOffset *
+                            _step4PositionAnimation.value,
+                        0),
+                    borderRadius: widget.squareBorderRadius,
+                    blurValue: _step4BlurAnimation.value,
+                  ),
+                //левый верхний
+                if (_step3PositionAnimation.value > 0)
+                  SquareTranslated(
+                    size: widget.smallSquareSide,
+                    offset: Offset(
+                      0,
+                      -widget.halfBigSquareSide * _step3PositionAnimation.value,
+                    ),
+                    borderRadius: widget.squareBorderRadius,
+                    blurValue: _step3BlurAnimation.value,
+                  ),
+                //левый нижний
+                if (_step3PositionAnimation.value > 0)
+                  SquareTranslated(
+                    size: widget.smallSquareSide,
+                    offset: Offset(
+                      0,
+                      widget.halfBigSquareSide * _step3PositionAnimation.value,
+                    ),
+                    borderRadius: widget.squareBorderRadius,
+                    blurValue: _step3BlurAnimation.value,
+                  ),
+                //большой, переходящий в левый центральный
+                SquareBigToSmall(
+                  introController: widget.introController,
+                  transformController: widget.transformController,
+                  smallSquareSide: widget.smallSquareSide,
+                  squareBorderRadius: widget.squareBorderRadius,
+                ),
+              ],
             ),
-          //центральный верхний
-          if (_step4PositionAnimation.value > 0)
-            SquarePartTranslated(
-              size: widget.smallSquareSide,
-              offset: Offset(
-                widget.horizontalDiagonalOffset * _step4PositionAnimation.value,
-                -widget.halfBigSquareSide * _step3PositionAnimation.value,
-              ),
-              borderRadius: widget.squareBorderRadius,
-              blurValue: _step4BlurAnimation.value,
-            ),
-          //центральный
-          if (_step4PositionAnimation.value > 0)
-            SquarePartTranslated(
-              size: widget.smallSquareSide,
-              offset: Offset(
-                  widget.horizontalDiagonalOffset *
-                      _step4PositionAnimation.value,
-                  0),
-              borderRadius: widget.squareBorderRadius,
-              blurValue: _step4BlurAnimation.value,
-            ),
-          //левый верхний
-          if (_step3PositionAnimation.value > 0)
-            SquareTranslated(
-              size: widget.smallSquareSide,
-              offset: Offset(
-                0,
-                -widget.halfBigSquareSide * _step3PositionAnimation.value,
-              ),
-              borderRadius: widget.squareBorderRadius,
-              blurValue: _step3BlurAnimation.value,
-            ),
-          //левый нижний
-          if (_step3PositionAnimation.value > 0)
-            SquareTranslated(
-              size: widget.smallSquareSide,
-              offset: Offset(
-                0,
-                widget.halfBigSquareSide * _step3PositionAnimation.value,
-              ),
-              borderRadius: widget.squareBorderRadius,
-              blurValue: _step3BlurAnimation.value,
-            ),
-          //большой, переходящий в левый центральный
-          SquareBigToSmall(
-            introController: widget.introController,
-            transformController: widget.transformController,
-            smallSquareSide: widget.smallSquareSide,
-            squareBorderRadius: widget.squareBorderRadius,
-          ),
-        ],
-      ),
-    );
+          );
+        });
   }
 }

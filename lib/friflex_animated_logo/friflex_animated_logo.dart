@@ -72,50 +72,45 @@ class FriflexAnimatedLogoState extends State<FriflexAnimatedLogo>
       final borderRadius = smallSquareSide / 6.0;
       final horizontalDiagonalOffset =
           smallSquareSide * (1 + (sqrt(2) - 1)) * 0.9;
-
-      return AnimatedBuilder(
-          animation: Listenable.merge(
-            [
-              introController,
-              transformController,
-            ],
-          ),
-          builder: (context, _) {
-            return RepaintBoundary(
-              child: SizedBox(
-                width: logoWidth,
-                height: logoHeight,
-                child: Stack(
-                  children: [
-                    //текст Friflex с нарисованной i
-                    Positioned(
-                      bottom: 0.0,
-                      right: bigSquareSide / 2.0 + bigSquareDiagonalDiff,
-                      child: FriflexAnimatedText(
-                        controller: transformController,
-                        logoWidth: logoWidth,
-                      ),
-                    ),
-                    //появление, смещение и трансформация ромба в F
-                    Positioned(
+      return RepaintBoundary(
+        child: SizedBox(
+          width: logoWidth,
+          height: logoHeight,
+          child: Stack(
+            children: [
+              //текст Friflex с нарисованной i
+              Positioned(
+                bottom: 0.0,
+                right: bigSquareSide / 2.0 + bigSquareDiagonalDiff,
+                child: FriflexAnimatedText(
+                  controller: transformController,
+                  logoWidth: logoWidth,
+                ),
+              ),
+              //появление, смещение и трансформация ромба в F
+              AnimatedBuilder(
+                animation: transformController,
+                builder: (context, child) {
+                  return Positioned(
                       left: _step1SquarePositionAnimation.value *
                           (logoWidth / 2.0 - logoHeight / 2.0),
                       bottom: 0,
-                      child: FriflexAnimatedFSymbol(
-                        introController: introController,
-                        transformController: transformController,
-                        squareBorderRadius: borderRadius,
-                        bigSquareDiagonal: bigSquareDiagonal,
-                        horizontalDiagonalOffset: horizontalDiagonalOffset,
-                        halfBigSquareSide: halfBigSquareSide,
-                        smallSquareSide: smallSquareSide,
-                      ),
-                    ),
-                  ],
+                      child: child!);
+                },
+                child: FriflexAnimatedFSymbol(
+                  introController: introController,
+                  transformController: transformController,
+                  squareBorderRadius: borderRadius,
+                  bigSquareDiagonal: bigSquareDiagonal,
+                  horizontalDiagonalOffset: horizontalDiagonalOffset,
+                  halfBigSquareSide: halfBigSquareSide,
+                  smallSquareSide: smallSquareSide,
                 ),
               ),
-            );
-          });
+            ],
+          ),
+        ),
+      );
     });
   }
 }

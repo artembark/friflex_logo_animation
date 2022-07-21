@@ -26,8 +26,10 @@ class SquarePainter extends CustomPainter {
 
     //рисование квадрата с углами
     canvas.drawRRect(
-        RRect.fromLTRBR(
-            0, 0, size.width, size.height, Radius.circular(borderRadius)),
+        RRect.fromRectAndRadius(
+          Offset.zero & size,
+          Radius.circular(borderRadius),
+        ),
         paint);
   }
 

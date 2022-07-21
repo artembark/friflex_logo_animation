@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
 
@@ -25,42 +26,40 @@ class SquarePartPainter extends CustomPainter {
     canvas.rotate(45 * pi / 180);
     canvas.translate(-size.width / 2, -size.height / 2);
 
-    //для того, чтобы получить прозрачный вырез
-    canvas.saveLayer(Rect.fromLTRB(0, 0, size.width, size.height), paint);
+    if (kIsWeb) {
+      //для того, чтобы получить прозрачный вырез
+      canvas.saveLayer(Offset.zero & size, paint);
 
-    //рисуем квадрат
-    canvas.drawRRect(
-        RRect.fromLTRBR(
-            0, 0, size.width, size.height, Radius.circular(borderRadius)),
-        paint);
-    //рисуем вырез в режиме BlendMode.dstOut
-    canvas.drawRRect(
-        RRect.fromLTRBAndCorners(
-            -2, size.height * 0.3, size.width * 0.7, size.height + 2,
-            topRight: Radius.circular(borderRadius)),
-        paint..blendMode = BlendMode.dstOut);
-    //делаем restore для получения комбинирования нарисованных объектов
-    // с учетом blendMode
-    canvas.restore();
-
-    //не работает с html рендерером в мобильных браузерах
-    // canvas.drawRRect(
-    //     RRect.fromLTRBR(
-    //         0, 0, size.width, size.height, Radius.circular(borderRadius)),
-    //     paint);
-    // canvas.drawPath(
-    //   Path.combine(
-    //     PathOperation.difference,
-    //     Path()
-    //       ..addRRect(RRect.fromLTRBR(
-    //           0, 0, size.width, size.height, Radius.circular(borderRadius))),
-    //     Path()
-    //       ..addRRect(RRect.fromLTRBAndCorners(
-    //           0, size.height * 0.3, size.width * 0.7, size.height,
-    //           topRight: Radius.circular(borderRadius))),
-    //   ),
-    //   paint,
-    // );
+      //рисуем квадрат
+      canvas.drawRRect(
+          RRect.fromRectAndRadius(
+              Offset.zero & size, Radius.circular(borderRadius)),
+          paint);
+      //рисуем вырез в режиме BlendMode.dstOut
+      canvas.drawRRect(
+          RRect.fromLTRBAndCorners(
+              -2, size.height * 0.3, size.width * 0.7, size.height + 2,
+              topRight: Radius.circular(borderRadius)),
+          paint..blendMode = BlendMode.dstOut);
+      //делаем restore для получения комбинирования нарисованных объектов
+      // с учетом blendMode
+      canvas.restore();
+    } else {
+      //не работает с html рендерером в мобильных браузерах
+      canvas.drawPath(
+        Path.combine(
+          PathOperation.difference,
+          Path()
+            ..addRRect(RRect.fromRectAndRadius(
+                Offset.zero & size, Radius.circular(borderRadius))),
+          Path()
+            ..addRRect(RRect.fromLTRBAndCorners(
+                0, size.height * 0.3, size.width * 0.7, size.height,
+                topRight: Radius.circular(borderRadius))),
+        ),
+        paint,
+      );
+    }
   }
 
   @override

@@ -120,18 +120,22 @@ class _FriflexTextLogoState extends State<FriflexTextLogo> {
       child: Stack(
         alignment: Alignment.bottomCenter,
         children: [
-          SizedBox(
-            width: widget.logoWidth * 490 / 862,
-            height: widget.logoWidth * 132 / 862,
-            child: CustomPaint(
-              painter: FriflexIPainter(
-                iDotYPosition: _iDotYPosition.value,
-                iRectHeight: _iRectHeight.value,
-                iDotRotation: _iDotRotation.value,
-                iDotOpacity: _iDotOpacity.value,
-              ),
-            ),
-          ),
+          AnimatedBuilder(
+              animation: widget.controller,
+              builder: (context, _) {
+                return SizedBox(
+                  width: widget.logoWidth * 490 / 862,
+                  height: widget.logoWidth * 132 / 862,
+                  child: CustomPaint(
+                    painter: FriflexIPainter(
+                      iDotYPosition: _iDotYPosition.value,
+                      iRectHeight: _iRectHeight.value,
+                      iDotRotation: _iDotRotation.value,
+                      iDotOpacity: _iDotOpacity.value,
+                    ),
+                  ),
+                );
+              }),
           SizedBox(
             width: widget.logoWidth * 490 / 862,
             height: widget.logoWidth * 132 / 862,
