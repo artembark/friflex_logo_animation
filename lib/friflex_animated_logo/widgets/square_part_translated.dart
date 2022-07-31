@@ -24,12 +24,10 @@ class SquarePartTranslated extends StatelessWidget {
   Widget build(BuildContext context) {
     return Transform.translate(
       offset: offset,
-      child: SizedBox.square(
-        dimension: size,
-        child: CustomPaint(
-          painter: SquarePartPainter(
-              borderRadius: borderRadius, blurValue: blurValue),
-        ),
+      child: CustomPaint(
+        size: Size(size, size),
+        painter:
+            SquarePartPainter(borderRadius: borderRadius, blurValue: blurValue),
       ),
     );
   }

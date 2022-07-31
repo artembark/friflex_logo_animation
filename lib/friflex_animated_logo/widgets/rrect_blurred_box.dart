@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:friflex_logo_animation/friflex_animated_logo/utils/logo_const.dart';
 
 class RRectBlurredBox extends LeafRenderObjectWidget {
+  /// Кастомный Render Object для закругленного прямоугольника
   /// Виджет, рисующий прямоугольник с цветом [color],
   /// радиусом углов [borderRadius] и размытием [blurValue]
   const RRectBlurredBox(
